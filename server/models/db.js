@@ -1,21 +1,19 @@
 import dotenv from 'dotenv';
 import { Sequelize } from 'sequelize';
-import path from 'path';
 
+dotenv.config();
 
-const envPath = path.resolve(import.meta.dirname, '../../db.env');
-dotenv.config({
-    path: envPath
-});
-
-
-const { DB_USER, DB_PASSWORD, DB_HOST, DB_DATABASE, DB_PORT } = process.env;
+const host = process.env.DB_HOST;
+const port = process.env.DB_PORT;
+const database = process.env.DB_NAME;
+const user = process.env.DB_USER;
+const password = process.env.DB_PASSWORD;
 
 // set up sequelize connection to database
 const sequelize = new Sequelize(
-    DB_DATABASE, DB_USER, DB_PASSWORD, {
-        host: DB_HOST,
-        port: DB_PORT,
+    database, user, password, {
+        host: host,
+        port: port,
         dialect: 'mysql',
         logging: query => console.log(`SQL: ${query}` )
     }

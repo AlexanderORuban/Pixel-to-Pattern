@@ -63,6 +63,8 @@ Follow these steps to run **Pixel to Pattern** locally:
 
 ## Environment Variables
 
+# Change to create a .env in backend and .env.local in frontend
+
 This project utilizes environment variables for configuration. You need to create a `db.env` file in the root directory based on the provided variable examples listed below.
 
    **Required Variables:**
