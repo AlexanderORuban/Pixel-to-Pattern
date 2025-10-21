@@ -1,3 +1,4 @@
+import mysql from "mysql2/promise";
 import dotenv from 'dotenv';
 import { Sequelize } from 'sequelize';
 
@@ -9,11 +10,20 @@ const database = process.env.DB_NAME;
 const user = process.env.DB_USER;
 const password = process.env.DB_PASSWORD;
 
-// set up sequelize connection to database
-const sequelize = new Sequelize(
-    database, user, password, {
-        host: host,
-        port: port,
+// Check if the database exists
+const makeDb = async () => {
+    const connection = await mysql.createConnection({ host, user, password });
+    await connection.query(`CREATE DATABASE IF NOT EXISTS \`${database}\`;`);
+    await connection.end();
+    console.log(`Database ${database} is ready.`);
+};
+
+await makeDb();
+
+// Set up sequelize connection to database
+const sequelize = new Sequelize(database, user, password, {
+        host,
+        port,
         dialect: 'mysql',
         logging: query => console.log(`SQL: ${query}` )
     }

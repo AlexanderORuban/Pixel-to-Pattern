@@ -1,12 +1,12 @@
 "use client";
-import {ToggleButtonGroup, ToggleButton, IconButton, TextField, Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, Card} from '@mui/material';
+import { ToggleButtonGroup, ToggleButton, IconButton, TextField, Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, Card } from '@mui/material';
 import CreateOutlinedIcon from '@mui/icons-material/CreateOutlined';
 import FormatColorFillIcon from '@mui/icons-material/FormatColorFill';
 import ClearIcon from '@mui/icons-material/Clear';
 import SendIcon from '@mui/icons-material/Send';
 import GridOnIcon from '@mui/icons-material/GridOn';
 import DrawIcon from '@mui/icons-material/Draw';
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from 'next/navigation';
 
 export default function PixelForm() {
@@ -17,14 +17,14 @@ export default function PixelForm() {
 
     // states for tools
     const [tool, setTool] = useState('pencil');
-    const [ color, setColor] = useState("#000000");
-    const [ clearDrawingAlert, setClearDrawingAlert] = useState(false);
+    const [color, setColor] = useState("#000000");
+    const [clearDrawingAlert, setClearDrawingAlert] = useState(false);
     const [showGrid, setShowGrid] = useState(true);
 
     // states for pixel canvas 
-    const [ canvasHeight, setCanvasHeight] = useState(10);
+    const [canvasHeight, setCanvasHeight] = useState(10);
     const [canvasWidth, setCanvasWidth] = useState(10);
-    const [ pixelFill, setPixelFill] = useState([]);
+    const [pixelFill, setPixelFill] = useState([]);
 
     const router = useRouter();
 
@@ -35,11 +35,11 @@ export default function PixelForm() {
 
 
     const handlePixelEvent = (index) => {
-        if (tool == 'pencil'){
+        if (tool == 'pencil') {
             setPixelFill((prev) => prev.map((currentColor, i) => (i === index ? color : currentColor)));
         } else if (tool == 'eraser') {
             setPixelFill((prev) => prev.map((currentColor, i) => (i === index ? "#fff" : currentColor)));
-        } else if (tool == 'fillBucket'){
+        } else if (tool == 'fillBucket') {
             setPixelFill((prev) => Array(prev.length).fill(color));
         }
     }
@@ -57,7 +57,7 @@ export default function PixelForm() {
         handleCloseClearAlert();
     }
 
-    const submitPixelForm = async() =>{
+    const submitPixelForm = async () => {
         const patternInfo = {
             width: canvasWidth,
             height: canvasHeight,
@@ -71,17 +71,18 @@ export default function PixelForm() {
             description: description
         }
 
-        try{
-            const res = await fetch('http://localhost:3001/patterns',
+        try {
+            const API = process.env.NEXT_PUBLIC_API_BASE_URL;
+            const res = await fetch(`${API}/patterns`,
                 {
                     method: "POST",
-                    headers: {"Content-Type": "application/json"},
+                    headers: { "Content-Type": "application/json" },
                     body: JSON.stringify(formSubmissionInfo)
                 }
             )
             const postID = await res.json();
 
-            if(!res.ok){
+            if (!res.ok) {
                 throw new Error(`PostID: ${postID} is not ok.`);
             } else {
                 router.push(`/view/${postID}`);
@@ -91,7 +92,7 @@ export default function PixelForm() {
         }
     }
 
-    const ClearDrawingDialog = () =>{
+    const ClearDrawingDialog = () => {
         return (
             <Dialog
                 open={clearDrawingAlert}
@@ -115,48 +116,48 @@ export default function PixelForm() {
 
     return (
         // main body box
-        <Card sx={{ margin: '1em', backgroundColor: 'white', padding: '2em'}}>
+        <Card sx={{ margin: '1em', backgroundColor: 'white', padding: '2em' }}>
 
             <ClearDrawingDialog />
 
             {/* Width and height */}
             <Box>
 
-                <TextField sx={{width: '100px', marginRight: '1em'}} onChange={(e) => setCanvasWidth(e.target.value)} value={canvasWidth} label="Width"></TextField>
-                <TextField sx={{width: '100px'}} onChange={(e) => setCanvasHeight(e.target.value)} value={canvasHeight} label="Height"></TextField>
+                <TextField sx={{ width: '100px', marginRight: '1em' }} onChange={(e) => setCanvasWidth(e.target.value)} value={canvasWidth} label="Width"></TextField>
+                <TextField sx={{ width: '100px' }} onChange={(e) => setCanvasHeight(e.target.value)} value={canvasHeight} label="Height"></TextField>
 
             </Box>
 
             {/* drawing tool bar */}
-            <Card sx={{ borderRadius: '3em',padding: '1em', margin: '1em auto', width: 'fit-content', display: 'flex', justifyContent: 'space-around', gap: '1em'}}>
-                
+            <Card sx={{ borderRadius: '3em', padding: '1em', margin: '1em auto', width: 'fit-content', display: 'flex', justifyContent: 'space-around', gap: '1em' }}>
+
                 {/* color input */}
                 <input style={{ height: '45px' }} type='color' value={color} onChange={(e) => setColor(e.target.value)} />
 
                 {/* tool select */}
-                <ToggleButtonGroup 
-                exclusive
-                value={tool}
-                onChange={(e, newTool) => setTool(newTool)}
-                aria-label='drawing tools'
+                <ToggleButtonGroup
+                    exclusive
+                    value={tool}
+                    onChange={(e, newTool) => setTool(newTool)}
+                    aria-label='drawing tools'
                 >
-                    
+
                     <ToggleButton value="pencil" aria-label='select pencil'>
                         <DrawIcon />
                     </ToggleButton>
-                    <ToggleButton value="fillBucket" aria-label='select fill bucket'> 
+                    <ToggleButton value="fillBucket" aria-label='select fill bucket'>
                         <FormatColorFillIcon />
                     </ToggleButton>
                     <ToggleButton value="eraser" aria-label='select eraser'>
-                        <CreateOutlinedIcon sx={{transform: 'scaleY(-1) scaleX(-1)'}}/>
+                        <CreateOutlinedIcon sx={{ transform: 'scaleY(-1) scaleX(-1)' }} />
                     </ToggleButton>
                 </ToggleButtonGroup>
 
                 {/* show grid toggle */}
-                <ToggleButton 
-                value="grid"
-                selected={showGrid}
-                onChange={() => setShowGrid((prev) => !prev)}
+                <ToggleButton
+                    value="grid"
+                    selected={showGrid}
+                    onChange={() => setShowGrid((prev) => !prev)}
                 >
                     <GridOnIcon />
                 </ToggleButton>
@@ -169,7 +170,7 @@ export default function PixelForm() {
             </Card>
 
             {/* Canvas Grid and pixels */}
-            <Box sx={{backgroundColor: 'whitesmoke', width: '100%', padding: '2em'}}>
+            <Box sx={{ backgroundColor: 'whitesmoke', width: '100%', padding: '2em' }}>
                 <Box sx={{
                     display: 'grid',
                     justifyContent: 'center',
@@ -213,17 +214,13 @@ export default function PixelForm() {
             </Box>
 
             {/* Name and description*/}
-            <Box sx={{display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1em', margin: '1em 2em 2em'}}>
+            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1em', margin: '1em 2em 2em' }}>
                 <TextField onChange={(e) => setName(e.target.value)} value={name} label="Name Your Pattern"></TextField>
                 <TextField onChange={(e) => setAuthor(e.target.value)} value={author} label="Author"></TextField>
-                <TextField onChange={(e) => setDescription(e.target.value)} value={description} multiline rows={3} sx={{width: '50%', minWidth: '250px'}} label="Description"></TextField>
+                <TextField onChange={(e) => setDescription(e.target.value)} value={description} multiline rows={3} sx={{ width: '50%', minWidth: '250px' }} label="Description"></TextField>
                 
-
-
                 <Button size='large' variant='contained' sx={{ alignSelf: 'end' }} endIcon={<SendIcon />} onClick={submitPixelForm}>Generate Pattern</Button>
             </Box>
-
-            
         </Card>
     )
 }
