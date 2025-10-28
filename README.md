@@ -82,3 +82,11 @@ Restart your development server if it's already running (e.g., npm start).
 ## Deployment Process
 Linked below is the documentation that was created while setting up the virtual machine for deployment.
 [Click Here!](https://loving-eye-8b5.notion.site/VM-Deployment-27e101a39e1480328574fee619f042d8)
+
+### Command to rebuild the frontend on the VM with the correct VM IP address
+docker build -t ghcr.io/alexanderoruban/pixel-to-pattern-frontend:latest \
+  --build-arg NEXT_PUBLIC_API_BASE_URL=http://<vm-ip>:3000 \
+  ./client
+
+### Command to run the frontend, backend, and database with the deployment docker-compose file
+docker compose -f docker-compose.deploy.yml up -d
