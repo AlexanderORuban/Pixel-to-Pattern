@@ -3,11 +3,11 @@ services:
     image: ghcr.io/alexanderoruban/pixel-to-pattern-frontend:latest
     container_name: frontend
     ports:
-      - "3001:3001"
+      - "80:3001"
     environment:
       - NODE_ENV=production
       - PORT=3001
-      - NEXT_PUBLIC_API_BASE_URL=http://backend:3000
+      - NEXT_PUBLIC_API_BASE_URL=http://<YOUR_VM_IP>:3000
     depends_on:
       - backend
     restart: unless-stopped
