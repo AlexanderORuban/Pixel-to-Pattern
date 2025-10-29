@@ -96,13 +96,6 @@ Linked below is the documentation that was created while setting up the virtual 
    2. Verify that the Base URL was changed: docker run --rm ghcr.io/AccountName/ContainerName:latest printenv | grep NEXT_PUBLIC_API_BASE_URL
    3. Push the container onto GHCR: docker push ghcr.io/AccountName/ContainerName:latest
 
-- Create a new directory for your project
-- Add the docker-compose.deploy.yml to your VM's new directory for the project
-- Create the .env and place at same level as the yml file
-- Pull the images: docker compose -f docker-compose.deploy.yml pull
-- Start the application: docker compose -f docker-compose.deploy.yml up -d
-- Verify the application's containers are running: docker ps
-
 ### VM Setup
 
 1. Log into VM with: `ssh root@VM_IP`
@@ -118,5 +111,11 @@ $(lsb_release -cs) stable" | \
 sudo tee /etc/apt/sources.list.d/docker.list > /dev/null`
 6. Install Docker engine and compose plugin: `sudo apt update
 sudo apt install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin`
-
-
+7. Verify it works: `sudo docker run hello-world`
+   - Should display “Hello from Docker!”
+8. Create a new directory for your project: `mkdir <name>`
+9. Add the docker-compose.deploy.yml to your VM's new directory for the project
+10. Create the .env and place at same level as the yml file
+11. Pull the images: `docker compose -f docker-compose.deploy.yml pull`
+12. Start the application: `docker compose -f docker-compose.deploy.yml up -d`
+13. Verify the application's containers are running: `docker ps`
