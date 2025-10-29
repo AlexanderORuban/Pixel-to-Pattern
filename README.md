@@ -83,10 +83,21 @@ Restart your development server if it's already running (e.g., npm start).
 Linked below is the documentation that was created while setting up the virtual machine for deployment.
 [Click Here!](https://loving-eye-8b5.notion.site/VM-Deployment-27e101a39e1480328574fee619f042d8)
 
-### Command to rebuild the frontend on the VM with the correct VM IP address
-docker build -t ghcr.io/alexanderoruban/pixel-to-pattern-frontend:latest \
-  --build-arg NEXT_PUBLIC_API_BASE_URL=http://<vm-ip>:3000 \
-  ./client
-
-### Command to run the frontend, backend, and database with the deployment docker-compose file
-docker compose -f docker-compose.deploy.yml up -d
+### Steps:
+- Create GHCR containers for both frontend and backend.
+- Login into GHCR in your code editor: echo "<YOUR_GITHUB_TOKEN>" | docker login ghcr.io -u <your_github_username> --password-stdin
+- Build the backend container and push onto the backend GHCR container.
+   1. Build the docker container: docker build --no-cache -t ghcr.io/AccountName/ContainerName:latest ./server
+   2. Push the container onto GHCR: docker push ghcr.io/AccountName/ContainerName:latest
+- Build the frontend container, replacing either .env.local with a base url of your VM's IP address or running these commands:
+   1. Build the docker container: docker build -t ghcr.io/AccountName/ContainerName:latest \
+         --build-arg NEXT_PUBLIC_API_BASE_URL=http://<vm-ip>:3000/OtherBackendPort \
+         ./client
+   2. Verify that the Base URL was changed: docker run --rm ghcr.io/AccountName/ContainerName:latest printenv | grep NEXT_PUBLIC_API_BASE_URL
+   3. Push the container onto GHCR: docker push ghcr.io/AccountName/ContainerName:latest
+- Create a new directory for your project
+- Add the docker-compose.deploy.yml to your VM's new directory for the project
+- Create the .env and place at same level as the yml file
+- Pull the images: docker compose -f docker-compose.deploy.yml pull
+- Start the application: docker compose -f docker-compose.deploy.yml up -d
+- Verify the application's containers are running: docker ps

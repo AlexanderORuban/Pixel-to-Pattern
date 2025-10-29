@@ -4,6 +4,10 @@ FROM node:18-alpine
 # Set working directory inside container
 WORKDIR /app
 
+# Adds ARG to ensure NEXT_PUBLIC_API_BASE_URL is baked into the build
+ARG NEXT_PUBLIC_API_BASE_URL
+ENV NEXT_PUBLIC_API_BASE_URL=${NEXT_PUBLIC_API_BASE_URL}
+
 # Copy package files into container
 COPY package*.json ./
 
