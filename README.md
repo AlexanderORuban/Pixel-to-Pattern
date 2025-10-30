@@ -90,9 +90,10 @@ Linked below is the documentation that was created while setting up the virtual 
    1. Build the docker container: docker build --no-cache -t ghcr.io/AccountName/ContainerName:latest ./server
    2. Push the container onto GHCR: docker push ghcr.io/AccountName/ContainerName:latest
 - Build the frontend container, replacing either .env.local with a base url of your VM's IP address or running these commands:
-   1. Build the docker container: docker build -t ghcr.io/AccountName/ContainerName:latest \
-         --build-arg NEXT_PUBLIC_API_BASE_URL=http://<vm-ip>:3000/OtherBackendPort \
-         ./client
+   1. Build the docker container: docker build --no-cache \
+  -t ghcr.io/Username/ContainerName:latest \
+  --build-arg NEXT_PUBLIC_API_BASE_URL=http://<VMIPAddress>:3000 \
+  ./client
    2. Verify that the Base URL was changed: docker run --rm ghcr.io/AccountName/ContainerName:latest printenv | grep NEXT_PUBLIC_API_BASE_URL
    3. Push the container onto GHCR: docker push ghcr.io/AccountName/ContainerName:latest
 

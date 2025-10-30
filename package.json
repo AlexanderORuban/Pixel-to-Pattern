@@ -2,7 +2,7 @@
   "scripts": {
     "dev": "concurrently \"npm run server\" \"npm run client\"",
     "server": "npm run dev --prefix server",
-    "client": "npm run dev --prefix client"
+    "client": "PORT=3001 npm run dev --prefix client"
   },
   "dependencies": {
     "dotenv": "^17.2.3",
