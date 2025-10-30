@@ -115,8 +115,8 @@ sudo apt install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin d
 7. Verify it works: `sudo docker run hello-world`
    - Should display “Hello from Docker!”
 8. Create a new directory for your project: `mkdir <name>`
-9. Add the docker-compose.deploy.yml to your VM's new directory for the project
-10. Create the .env and place at same level as the yml file
+9. From your local machine where the docker-compose.yml is, add the docker-compose.deploy.yml to your VM's new directory for the project with: `scp <source_file_path> root@<VM_IP>:root/pixel-to-pattern`
+10. Create the .env and place at same level as the yml file using: `nano .env`
 11. Pull the images: `docker compose -f docker-compose.deploy.yml pull`
 12. Start the application: `docker compose -f docker-compose.deploy.yml up -d`
 13. Verify the application's containers are running: `docker ps`
