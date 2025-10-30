@@ -1,8 +1,13 @@
 import mysql from "mysql2/promise";
 import dotenv from 'dotenv';
 import { Sequelize } from 'sequelize';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
-dotenv.config();
+// Resolve the project root .env path
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+dotenv.config({ path: path.join(__dirname, '../../.env') });
 
 const host = process.env.DB_HOST;
 const port = process.env.DB_PORT;
