@@ -5,7 +5,7 @@ export const updatePatternController = async(req, res) => {
     const patternInfo = req.body;
     const ID = patternInfo.pattern_ID;
     const pattern = {
-        pattern_name: patternInfo.patern_name,
+        pattern_name: patternInfo.pattern_name,
         pattern_author: patternInfo.author,
         description: patternInfo.description
     }

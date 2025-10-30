@@ -63,6 +63,8 @@ Follow these steps to run **Pixel to Pattern** locally:
 
 ## Environment Variables
 
+# Change to create a .env in backend and .env.local in frontend
+
 This project utilizes environment variables for configuration. You need to create a `db.env` file in the root directory based on the provided variable examples listed below.
 
    **Required Variables:**
@@ -80,3 +82,41 @@ Restart your development server if it's already running (e.g., npm start).
 ## Deployment Process
 Linked below is the documentation that was created while setting up the virtual machine for deployment.
 [Click Here!](https://loving-eye-8b5.notion.site/VM-Deployment-27e101a39e1480328574fee619f042d8)
+
+### Steps:
+- Create GHCR containers for both frontend and backend.
+- Login into GHCR in your code editor: echo "<YOUR_GITHUB_TOKEN>" | docker login ghcr.io -u <your_github_username> --password-stdin
+- Build the backend container and push onto the backend GHCR container.
+   1. Build the docker container: docker build --no-cache -t ghcr.io/AccountName/ContainerName:latest ./server
+   2. Push the container onto GHCR: docker push ghcr.io/AccountName/ContainerName:latest
+- Build the frontend container, replacing either .env.local with a base url of your VM's IP address or running these commands:
+   1. Build the docker container: docker build --no-cache \
+  -t ghcr.io/Username/ContainerName:latest \
+  --build-arg NEXT_PUBLIC_API_BASE_URL=http://<VMIPAddress>:3000 \
+  ./client
+   2. Verify that the Base URL was changed: docker run --rm ghcr.io/AccountName/ContainerName:latest printenv | grep NEXT_PUBLIC_API_BASE_URL
+   3. Push the container onto GHCR: docker push ghcr.io/AccountName/ContainerName:latest
+
+### VM Setup
+
+1. Log into VM with: `ssh root@VM_IP`
+2. Update Package index with: `sudo apt-get update -y`
+3. Upgrade existing packages (non interactive) with: `yes | sudo DEBIAN_FRONTEND=noninteractive apt-get -yqq upgrade`
+4. Install Docker: `sudo apt install -y ca-certificates curl gnupg lsb-release`
+5. Add Docker GPG Key and Repository: `sudo mkdir -p /etc/apt/keyrings
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+echo \
+"deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] \
+https://download.docker.com/linux/ubuntu \
+$(lsb_release -cs) stable" | \
+sudo tee /etc/apt/sources.list.d/docker.list > /dev/null`
+6. Install Docker engine and compose plugin: `sudo apt update
+sudo apt install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin`
+7. Verify it works: `sudo docker run hello-world`
+   - Should display “Hello from Docker!”
+8. Create a new directory for your project: `mkdir <name>`
+9. From your local machine where the docker-compose.yml is, add the docker-compose.deploy.yml to your VM's new directory for the project with: `scp <source_file_path> root@<VM_IP>:root/pixel-to-pattern`
+10. Create the .env and place at same level as the yml file using: `nano .env`
+11. Pull the images: `docker compose -f docker-compose.deploy.yml pull`
+12. Start the application: `docker compose -f docker-compose.deploy.yml up -d`
+13. Verify the application's containers are running: `docker ps`

@@ -36,8 +36,8 @@ export default function NavBar() {
             <Link href="/create" passHref>
               <Button sx={{ fontSize: '1.5rem', color: 'inherit' }}>Create</Button>
             </Link>
-            <Link href="/FAQs" passHref>
-              <Button sx={{ fontSize: '1.5rem', color: 'inherit' }}>FAQs</Button>
+            <Link href="/faq" passHref>
+              <Button sx={{ fontSize: '1.5rem', color: 'inherit' }}>FAQ</Button>
             </Link>
           </Box>
         </Toolbar>
