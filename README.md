@@ -1,82 +1,228 @@
-# 🎨 Pixel to Pattern  - Create your perfect piece!
+# Pixel to Pattern - Create Your Perfect Piece
 
-**Pixel to Pattern** turns your pixel art into beautiful, beginner friendly crochet patterns stitch by stitch, row by row.  
-Let the creativity flow!
+**Pixel to Pattern** turns your pixel art into beautiful, beginner-friendly crochet patterns, stitch by stitch and row by row.  
+Let the creativity flow.
 
+---
 
-
-
-## 🧶 Features
+## Features
 
 ### Create  
 Turn any pixel drawing into a crochet-ready pattern.  
-Each row lists the stitch counts per color, e.g.:
-        ( sc = single crochet)
-        Row 1: 28 sc (white)
-        Row 2: 9 sc (white), 10 sc (yellow), 9 sc (white)
-        Row 3: 8 sc (white), 10 sc (yellow), 9 sc (white)
+Each row lists the stitch counts per color, for example:
+
+```
+(sc = single crochet)
+Row 1: 28 sc (white)
+Row 2: 9 sc (white), 10 sc (yellow), 9 sc (white)
+Row 3: 8 sc (white), 10 sc (yellow), 9 sc (white)
+```
 
 ### Read  
-Browse all submitted creations and view detailed stitch by stitch patterns.
+Browse all submitted creations and view detailed, stitch-by-stitch patterns.
 
-### Update *(Coming Soon!)*  
+### Update  
 Users will soon be able to edit their own patterns directly.
 
-### Delete  
+### Delete *(Coming Soon)*  
 Remove any pattern you’ve posted with one click.
 
-
-
-
-## ⚙️ Local Setup
-
-Follow these steps to run **Pixel to Pattern** locally:
-
-1. **Fork and clone** this repository to your machine.  
-2. In the root directory, create a `.env` file named `db.env`.  
-3. **Install dependencies** in both the `server/` and `pixel2pattern/` folders:
-   ```bash
-   npm install
-   ```
-4. Navigate to `server/` and start the backend:
-   ```bash
-   npm run dev
-   ```
-5. Navigate to `pixel2pattern/`
-   ```bash
-     npm run dev
-   ```
-6. Open your browser at http://localhost:3000
-7. 🎨 Get creative!
-
-
-
+---
 
 ## Tech Stack
-- **Frontend:** NextJs, MaterialUI
-- **Backend:** Node.js, Express
-- **Database:** MySQL database with Sequelize used on the backend.
+
+- **Frontend:** Next.js, Material UI, React  
+- **Backend:** Node.js, Express  
+- **Database:** MySQL with Sequelize ORM  
+- **Deployment:** Docker containers, GitHub Container Repository (GHCR)  
 - **Version:** Node 24+
 
-
-
+---
 
 ## Environment Variables
 
-This project utilizes environment variables for configuration. You need to create a `db.env` file in the root directory based on the provided variable examples listed below.
+This project utilizes environment variables for configuration.  
+You will need to create both a `.env` file in the root directory and a `.env.local` file in the client directory, as outlined below.
 
-   **Required Variables:**
+### Server `.env` (example.env provided in root)
 
-   *   `DB_USER`: The username for the user created to run the database.
-   *   `DB_PASSWORD`: Your password used to access the database.
-   *   `DB_HOST`: The IP for the virtual machine running the database.
-   *   `DB_DATABASE`: name of the database you need to access.
-   *   `DB_PORT`: The port number the database is running on.
+**Required Variables:**
+- `DB_USER`: The username for the database user.  
+- `DB_PASSWORD`: The password for the database user.  
+- `DB_HOST`: The IP address for the machine running the database (use `localhost` for local development or `db` for Docker).  
+- `DB_DATABASE`: The name of the database to access.  
+- `DB_PORT`: The port number the database is running on.  
+- `SERVER_PORT`: The port number for the backend server (default: 3000).
 
-Edit `db.env` and replace placeholder values with your actual configuration.
-Restart your development server if it's already running (e.g., npm start).
+### Client `.env.local` (example.env.local provided in client)
 
+**Required Variables:**
+- `NEXT_PUBLIC_API_BASE_URL`: The base URL for API fetch requests (`http://localhost:3000` for local development or `http://<VM_IP>:3000` for deployment).  
+- `PORT`: The port number for the frontend server.
+
+---
+
+## Running Locally with Docker Compose
+
+You can run the entire Pixel to Pattern stack locally using Docker Compose.
+
+1. **Fork and clone** this repository:
+   ```bash
+   git clone https://github.com/AlexanderORuban/Pixel-to-Pattern.git
+   ```
+2. Ensure Docker and Docker Compose are installed.
+3. Create a `.env` file in the root directory with the necessary credentials listed above.
+4. Create a `.env.local` file in the client directory with the credentials listed above. 
+5. Build and start all services:
+   ```bash
+   docker compose up --build
+   ```
+6. Visit [http://localhost:3001](http://localhost:3001) to access the application.
+
+To stop containers:
+```bash
+docker compose down
+```
+
+### Rebuilding or Restarting Containers
+
+If you make code changes and want to rebuild the images:
+```bash
+docker compose build --no-cache
+docker compose up -d
+```
+
+To restart containers without rebuilding:
+```bash
+docker compose restart
+```
+
+---
+
+## Local Setup (Non-Docker)
+
+These steps apply only if you wish to run **Pixel to Pattern** manually without Docker.
+
+1. **Fork and clone** this repository:
+   ```bash
+   git clone https://github.com/AlexanderORuban/Pixel-to-Pattern.git
+   ```
+2. In the root directory, create a `.env` file and a `.env.local` file in the client directory as described above.  
+3. **Install dependencies** in the root, `server/`, and `client/` directories:
+   ```bash
+   npm install
+   ```
+4. Run the application from the root:
+   ```bash
+   npm run dev
+   ```
+5. Open your browser at [http://localhost:3001](http://localhost:3001)  
+6. Start creating your pattern.
+
+---
 
 ## Deployment Process
-Linked below is the documentation that was created while setting up the virtual machine for deployment.
-[Click Here!](https://loving-eye-8b5.notion.site/VM-Deployment-27e101a39e1480328574fee619f042d8)
+
+### Steps
+
+1. Create GHCR containers for both frontend and backend.  
+2. Log into GHCR in your terminal or code editor:
+   ```bash
+   echo "<YOUR_GITHUB_TOKEN>" | docker login ghcr.io -u <your_github_username> --password-stdin
+   ```
+3. **Build and push the backend container:**
+   ```bash
+   docker build --no-cache -t ghcr.io/<UserName>/<BackendContainer>:latest ./server
+   docker push ghcr.io/<UserName>/<BackendContainer>:latest
+   ```
+4. **Build and push the frontend container:**
+   Replace the `.env.local` base URL with your VM’s IP address, or use the following commands:
+   ```bash
+   docker build --no-cache      -t ghcr.io/<Username>/<FrontendContainer>:latest      --build-arg NEXT_PUBLIC_API_BASE_URL=http://<VM_IP>:3000      ./client
+   docker run --rm ghcr.io/<UserName>/<FrontendContainer>:latest printenv | grep NEXT_PUBLIC_API_BASE_URL
+   docker push ghcr.io/<UserName>/<FrontendContainer>:latest
+   ```
+
+---
+
+## VM Setup
+
+1. Log into your VM:
+   ```bash
+   ssh root@<VM_IP>
+   ```
+2. Update the package index:
+   ```bash
+   sudo apt-get update -y
+   ```
+3. Upgrade existing packages (non-interactive):
+   ```bash
+   yes | sudo DEBIAN_FRONTEND=noninteractive apt-get -yqq upgrade
+   ```
+4. Install Docker dependencies:
+   ```bash
+   sudo apt install -y ca-certificates curl gnupg lsb-release
+   ```
+5. Add the Docker GPG key and repository:
+   ```bash
+   sudo mkdir -p /etc/apt/keyrings
+   curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+   echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg]    https://download.docker.com/linux/ubuntu    $(lsb_release -cs) stable" |    sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+   ```
+6. Install the Docker engine and compose plugin:
+   ```bash
+   sudo apt update
+   sudo apt install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+   ```
+7. Verify installation:
+   ```bash
+   sudo docker run hello-world
+   ```
+   Expected output: “Hello from Docker!”
+8. Create a new project directory:
+   ```bash
+   mkdir <project_name> && cd <project_name>
+   ```
+9. Add your `docker-compose.deploy.yml` file to the directory.  
+10. Create a `.env` file and place it at the same level as the YAML file.  
+11. Pull the images:
+    ```bash
+    docker compose -f docker-compose.deploy.yml pull
+    ```
+12. Start the application:
+    ```bash
+    docker compose -f docker-compose.deploy.yml up -d
+    ```
+13. Verify the containers are running:
+    ```bash
+    docker ps
+    ```
+
+---
+
+## Troubleshooting
+
+**Common Docker Issues**
+
+- **Ports already in use:**  
+  Stop conflicting containers or change the port in `docker-compose.yml`.  
+  ```bash
+  docker ps
+  docker stop <container_id>
+  ```
+
+- **Environment variables not loading:**  
+  Ensure `.env` and `.env.local` files are in the correct directories and not ignored by `.dockerignore`.
+
+- **Containers not starting:**  
+  Check logs for detailed errors:
+  ```bash
+  docker compose logs
+  ```
+
+- **MySQL connection errors:**  
+  Use `DB_HOST=db` in your `.env` when using Docker Compose.  
+  Test with:
+  ```bash
+  docker exec -it db mysql -u root -p
+  ```
