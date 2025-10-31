@@ -24,6 +24,25 @@ export default function PatternPage({ params }) {
     setEditView(true);
   }
 
+  const handleDelete = async () => {
+    if (!confirm("Are you sure you want to delete this pattern?")) return;
+  
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/patterns/${post.pattern_ID}`, {
+        method: "DELETE",
+      });
+  
+      if (!res.ok) throw new Error("Delete failed");
+  
+      alert("Pattern deleted!");
+      window.location.href = "/";
+    } catch (err) {
+      console.error(err);
+      alert("Error deleting pattern");
+    }
+  };
+  
+
   useEffect(() => {
     const fetchPost = async () => {
       try {
@@ -74,6 +93,20 @@ export default function PatternPage({ params }) {
               <Typography variant="body1" sx={{ lineHeight: 1.7, textAlign: "justify", color: "text.primary", maxWidth: "90%", }} >
                 {post.description}
               </Typography>
+
+              {/* delete button */}
+              <button
+                onClick={handleDelete}
+                style={{
+                  background: "red",
+                  color: "white",
+                  padding: "10px 15px",
+                  marginTop: "15px",
+                  borderRadius: "5px"
+                }}
+              >
+                Delete Pattern
+              </button>
             </CardContent>
           </Card>
         ) : (<EditablePatternView post={post} onCancel={onCancel} />)}
