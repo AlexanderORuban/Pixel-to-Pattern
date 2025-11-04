@@ -1,6 +1,9 @@
 services:
   frontend:
-    build: ./client              
+    build:
+      context: ./client
+      args:
+        NEXT_PUBLIC_API_BASE_URL: "http://localhost:3000"
     container_name: frontend
     ports:
       - "3001:3001"
@@ -31,6 +34,8 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
       MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
     volumes:
       - db_data:/var/lib/mysql
     restart: unless-stopped
