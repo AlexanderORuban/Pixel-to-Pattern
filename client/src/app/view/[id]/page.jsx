@@ -9,6 +9,10 @@ import PatternGenerator from "@/components/PatternGenerator";
 import Button from "@mui/material/Button";
 import EditablePatternView from "@/components/EditablePatternView";
 
+// importing jsPDF library to generate PDF files in the browser
+import jsPDF from "jspdf";
+// import PDF icon to display on the Export PDF button
+import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 
 export default function PatternPage({ params }) {
   const { id } = useParams();
@@ -23,6 +27,67 @@ export default function PatternPage({ params }) {
     console.log("Clicked!");
     setEditView(true);
   }
+
+  // delete pattern
+  const handleDelete = async () => {
+    if (!confirm("Are you sure you want to delete this pattern?")) return;
+  
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/patterns/${post.pattern_ID}`, {
+        method: "DELETE",
+      });
+  
+      if (!res.ok) throw new Error("Delete failed");
+  
+      alert("Pattern deleted!");
+      window.location.href = "/";
+    } catch (err) {
+      console.error(err);
+      alert("Error deleting pattern");
+    }
+  };
+  
+  // export to PDF
+  const exportPDF = () => {
+    if (!post || !patternConfig) return;
+
+    const doc = new jsPDF();
+
+    // Pattern title
+    doc.setFontSize(18);
+    doc.text(post.pattern_name, 10, 10);
+
+    // Metadata
+    doc.setFontSize(12);
+    doc.text(`Author: ${post.author}`, 10, 20);
+    doc.text(`Date: ${post.date?.slice(0, 10)}`, 10, 28);
+    doc.text("Description:", 10, 38);
+    
+    const description = post.description || "";
+    doc.text(description, 10, 46, { maxWidth: 180 });
+
+    // Stitch rows section
+    doc.text("Pattern Stitch Rows:", 10, 60);
+    let y = 70;
+
+    const rows = patternConfig?.colorConfig || [];
+    const width = patternConfig?.width || 0;
+
+    for (let i = 0; i < rows.length; i += width) {
+      const rowColors = rows.slice(i, i + width);
+      const rowText = `Row ${i / width + 1}: ${rowColors.join(", ")}`;
+
+      doc.text(rowText, 10, y);
+
+      y += 6;
+      if (y > 280) {
+        doc.addPage();
+        y = 10;
+      }
+    }
+
+    doc.save(`${post.pattern_name}.pdf`);
+  }; 
 
   useEffect(() => {
     const fetchPost = async () => {
@@ -74,6 +139,31 @@ export default function PatternPage({ params }) {
               <Typography variant="body1" sx={{ lineHeight: 1.7, textAlign: "justify", color: "text.primary", maxWidth: "90%", }} >
                 {post.description}
               </Typography>
+
+              {/* delete button */}
+              <button
+                onClick={handleDelete}
+                style={{
+                  background: "red",
+                  color: "white",
+                  padding: "10px 16px",
+                  marginTop: "15px",
+                  borderRadius: "5px"
+                }}
+              >
+                DELETE PATTERN
+              </button>
+
+              {/*Export PDF Button */}
+              <Button 
+                variant="contained"
+                color="primary"
+                startIcon={<PictureAsPdfIcon />}
+                onClick={exportPDF}
+                sx={{ mb: 2 }}
+              >
+                Export PDF
+              </Button>
             </CardContent>
           </Card>
         ) : (<EditablePatternView post={post} onCancel={onCancel} />)}
