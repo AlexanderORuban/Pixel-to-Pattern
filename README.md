@@ -127,15 +127,15 @@ These steps apply only if you wish to run **Pixel to Pattern** manually without 
    ```
 3. **Build and push the backend container:**
    ```bash
-   docker build --no-cache -t ghcr.io/<UserName>/<BackendContainer>:latest ./server
-   docker push ghcr.io/<UserName>/<BackendContainer>:latest
-   ```
-4. **Build and push the frontend container:**
-   ```bash
-   docker build --no-cache -t ghcr.io/<Username>/<FrontendContainer>:latest ./client
-   docker push ghcr.io/<UserName>/<FrontendContainer>:latest
+   docker build --no-cache -t ghcr.io/<UserName>/pixel-to-pattern-backend:latest ./server
+   docker push ghcr.io/<UserName>/pixel-to-pattern-backend:latest
    ```
 
+4. **Build and push the frontend container:**
+   ```bash
+   docker build --no-cache -t ghcr.io/<Username>/pixel-to-pattern-frontend ./client
+   docker push ghcr.io/<UserName>/pixel-to-pattern-frontend:latest
+   ```
 ---
 
 ## VM Setup
