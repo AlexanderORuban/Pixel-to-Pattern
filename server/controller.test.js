@@ -1,5 +1,11 @@
 // TODO: add tests for CRUD in controller.js here - this is for testing the req res objects NOT the actual database interaction, that will be in the model.test.js
-import { getAll, getSpecificPattern, uploadPattern, updatePatternController, deletePattern } from './patternController.js';
+// import { getAll, getSpecificPattern, uploadPattern, updatePatternController, deletePattern } from './controllers/controller';
+
+
+// SAMPLE SIMPLE TEST
+test('always true', () => {
+  expect(true).toBe(true);
+});
 
 // set up mock req/res objects 
 
