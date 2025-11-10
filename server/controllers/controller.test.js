@@ -34,14 +34,27 @@ test('always true', () => {
 
 // getAll test
 describe("getAll", () => {
-    // before each test, clear req and res
+    // before EACH test, clear req and res
     let req, res;
     beforeEach(() => {
         req = {}
         res = { status: jest.fn().mockReturnThis(), json: jest.fn() }
     })
 
-    test('getAll return 200 and data when DB works', () => {expect(true).toBe(true);});
+    test('getAll return 200 and data when DB works', async () => {
+      // Arrange: mock model layer behavior
+      const fakeData = [{ pattern_ID: 1, pattern_name: "test"}];
+      mockModel.getAllPatterns.mockResolvedValue(fakeData);
+
+      // Act: Call controller
+      await getAll(req, res);
+
+      // Assert
+      expect(res.status).toHaveBeenCalledWith(200);
+      expect(res.json).toHaveBeenCalledWith(fakeData);
+    });
+
+    // TODO: Complete these tests
     test('getAll return 200 and handly empty DB array gracefully', () => {expect(true).toBe(true);});
     test('getAll return 500 when DB fails', () => {expect(true).toBe(true);});
 })
