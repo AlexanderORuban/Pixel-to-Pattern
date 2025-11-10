@@ -1,0 +1,26 @@
+# This docker compose sets up one-shot test runner containers and test overrides
+# Contains:
+# - backend-tests
+# - (planned) frontend-tests
+# - (planned) e2e tests
+
+# (if needed) TO FORCE DOCKER TO REBUILD IMAGE: docker compose -f docker-compose.test.yml build --no-cache backend
+# TO RUN : docker compose -f docker-compose.test.yml up --abort-on-container-exit
+# TO CLOSE: docker compose -f docker-compose.test.yml down -v
+
+# define services
+services:
+  # define backend service
+  backend:
+    build: ./server
+    env_file: .env.test
+    depends_on:
+      - db-test
+    command: ["npm", "test"] # run tests in service
+
+  # creates a db just for testing
+  db-test:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: testpass
+      MYSQL_DATABASE: test_db
