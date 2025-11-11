@@ -23,5 +23,15 @@ describe('NavBar', () => {
         expect(title).toBeInTheDocument();
     })
 
-    test.todo('renders navigation links with correct destinations')
+    test('renders navigation links with correct destinations', () => {
+        render(<NavBar />);
+
+        const homeLink = screen.getByRole('link', { name: /Home/i });
+        const createLink = screen.getByRole('link', { name: /Create/i});
+        const faqLink = screen.getByRole('link', { name: /FAQ/i});
+
+        expect(homeLink).toHaveAttribute('href', '/');
+        expect(createLink).toHaveAttribute('href', '/create');
+        expect(faqLink).toHaveAttribute('href', '/faq');
+    })
 })
