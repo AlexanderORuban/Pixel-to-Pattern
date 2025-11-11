@@ -7,3 +7,12 @@ jest.mock('next/link', () => {
     return ({ children, href }) => <a href={href}>{children}</a>;
 });
 
+describe('NavBar', () => {
+    test.todo('renders logo and title', () => {
+
+    })
+
+    test.todo('renders navigation links with correct destinations', () => {
+        
+    })
+})
