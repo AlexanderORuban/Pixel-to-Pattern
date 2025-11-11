@@ -31,8 +31,10 @@ test('always true', () => {
 });
 
 // uploadPattern test
+// - success 201 return patternID
+// - error 500, error: err.message
 
-// getAll test
+// getAll tests
 describe("getAll", () => {
     // before EACH test, clear req and res
     let req, res;
@@ -59,8 +61,15 @@ describe("getAll", () => {
     test('getAll return 500 when DB fails', () => {expect(true).toBe(true);});
 })
 
-// getSpecificPattern test
+// getSpecificPattern tests
+// - return 200 and pattern
+// - return 200 and empty? 
+// - return 500 error when db fails
 
-// updatePatternController test
+// updatePatternController tests
+// - successful input, 204
+// - db error 500
 
-// deletePattern test
+// deletePattern tests
+// - delete successful, 200 and message: "Pattern deleted successfully"
+// - error 500, message: "Error deleting pattern", and error object passed
