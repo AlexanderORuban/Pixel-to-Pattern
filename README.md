@@ -91,13 +91,10 @@ To restart containers without rebuilding:
 ```bash
 docker compose restart
 ```
-
 ---
-
 ## Local Setup (Non-Docker)
 
 These steps apply only if you wish to run **Pixel to Pattern** manually without Docker.
-
 1. **Fork and clone** this repository:
    ```bash
    git clone https://github.com/AlexanderORuban/Pixel-to-Pattern.git
@@ -219,3 +216,13 @@ These steps apply only if you wish to run **Pixel to Pattern** manually without 
   ```bash
   docker exec -it db mysql -u root -p
   ```
+## Testing
+### Run all tests in Docker
+1. *(If needed)* force Docker to build/rebuild docker-compose.test image: 
+`docker compose -f docker-compose.test.yml build --no-cache backend`
+2. Spin up Docker test services:
+`docker compose -f docker-compose.test.yml up --abort-on-container-exit`
+3. Close Docker test services:
+`docker compose -f docker-compose.test.yml down -v`
+### Run backend unit tests
+From the server directory, run `npm run test` to run Jest unit tests locally.
