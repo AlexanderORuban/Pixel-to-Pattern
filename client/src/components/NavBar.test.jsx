@@ -1,3 +1,5 @@
+import React from 'react';
+
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import NavBar from './NavBar';
@@ -8,11 +10,18 @@ jest.mock('next/link', () => {
 });
 
 describe('NavBar', () => {
-    test.todo('renders logo and title', () => {
+    test('renders logo and title', () => {
+        // render NavBar in the vdom
+        render(<NavBar />)
 
+        // find elements by their text
+        const logo = screen.getByAltText('Logo');
+        const title = screen.getByText('Pixel2Pattern');
+
+        // assert that elements are rendered
+        expect(logo).toBeInTheDocument();
+        expect(title).toBeInTheDocument();
     })
 
-    test.todo('renders navigation links with correct destinations', () => {
-        
-    })
+    test.todo('renders navigation links with correct destinations')
 })
