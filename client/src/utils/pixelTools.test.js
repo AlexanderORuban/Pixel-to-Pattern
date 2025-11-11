@@ -11,9 +11,13 @@ describe('applyTool', () => {
         const pixels = ['#000000', '#ff8d2fff', '#5381ffff'];
         const result = applyTool(pixels, 1, 'eraser', '#000000');
         expect(result).toEqual(['#000000', '#fff', '#5381ffff']);
-    })
+    });
 
-    test.todo('fillBucket replaces all pixels with the selected color')
+    test('fillBucket replaces all pixels with the selected color', () => {
+        const pixels = ['#ff0000ff', '#ffae00ff', '#002fffff']
+        const result = applyTool(pixels, 0, 'fillBucket', 'rgba(33, 201, 165, 1)')
+        expect(result).toEqual(['rgba(33, 201, 165, 1)', 'rgba(33, 201, 165, 1)', 'rgba(33, 201, 165, 1)'])
+    });
 
     test.todo('returns the same array if tool is unrecognized')
 })
