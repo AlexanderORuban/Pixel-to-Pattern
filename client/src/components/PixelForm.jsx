@@ -9,6 +9,8 @@ import DrawIcon from '@mui/icons-material/Draw';
 import { useEffect, useState } from "react";
 import { useRouter } from 'next/navigation';
 
+import { applyTool } from '../utils/pixelTools';
+
 export default function PixelForm() {
     // form detail states
     const [name, setName] = useState("");
@@ -35,14 +37,8 @@ export default function PixelForm() {
 
 
     const handlePixelEvent = (index) => {
-        if (tool == 'pencil') {
-            setPixelFill((prev) => prev.map((currentColor, i) => (i === index ? color : currentColor)));
-        } else if (tool == 'eraser') {
-            setPixelFill((prev) => prev.map((currentColor, i) => (i === index ? "#fff" : currentColor)));
-        } else if (tool == 'fillBucket') {
-            setPixelFill((prev) => Array(prev.length).fill(color));
-        }
-    }
+        setPixelFill((prev) => applyTool(prev, index, tool, color));
+    };
 
     const handleCloseClearAlert = () => {
         setClearDrawingAlert(false);

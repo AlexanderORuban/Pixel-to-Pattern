@@ -219,7 +219,7 @@ These steps apply only if you wish to run **Pixel to Pattern** manually without 
 ## Testing
 ### Run all tests in Docker
 1. *(If needed)* force Docker to build/rebuild docker-compose.test image: 
-`docker compose -f docker-compose.test.yml build --no-cache backend`
+`docker compose -f docker-compose.test.yml build --no-cache backend-tests`
 2. Spin up Docker test services:
 `docker compose -f docker-compose.test.yml up --abort-on-container-exit`
 3. Close Docker test services:
