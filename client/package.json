@@ -13,7 +13,7 @@
   "jest": {
     "testEnvironment": "jsdom",
     "transform": {
-    "^.+\\.(js|jsx)$": ["babel-jest", { "configFile": "./babel.config.test.js" }]
+    "^.+\\.(js|jsx)$": ["babel-jest", { "configFile": "./babel.config.jest.js" }]
   },
     "moduleNameMapper": {
       "\\.(css|less|scss|sass)$": "identity-obj-proxy"
