@@ -10,17 +10,26 @@
 
 # define services
 services:
-  # define backend service
-  backend:
-    build: ./server
-    env_file: .env.test
-    depends_on:
-      - db-test
-    command: ["npm", "test"] # run tests in service
-
-  # creates a db just for testing
   db-test:
     image: mysql:8.0
     environment:
       MYSQL_ROOT_PASSWORD: testpass
       MYSQL_DATABASE: test_db
+  backend-tests:
+    build: ./server
+    env_file: .env.test
+    depends_on:
+      - db-test
+    command: ["npm", "test"]
+  frontend-tests:
+    image: node:20
+    working_dir: /app
+    volumes:
+      - ./client:/app
+    environment:
+      - CI=true
+    command: >
+      sh -lc "npm ci && npm run test:ci"
+
+
+
