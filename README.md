@@ -226,6 +226,8 @@ These steps apply only if you wish to run **Pixel to Pattern** manually without 
 `docker compose -f docker-compose.test.yml down -v`
 ### Run backend unit tests
 From the server directory, run `npm run test` to run Jest unit tests locally.
+### Run frontend unit tests
+From the client directory, run `npm test`
 ### Run E2E tests
 *These commands need to be run from the **root** of the project*
 #### Option 1 | Through Bash Terminal
