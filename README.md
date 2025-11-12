@@ -228,12 +228,12 @@ These steps apply only if you wish to run **Pixel to Pattern** manually without 
 From the server directory, run `npm run test` to run Jest unit tests locally.
 ### Run E2E tests
 *These commands need to be run from the **root** of the project*
-#### Through Bash Terminal
+#### Option 1 | Through Bash Terminal
 ```bash
 npm run cypress:run
 ```
 
-#### Throught Cypress GUI (useful for dev)
+#### Option 2 | Through Cypress GUI (useful for dev)
 ```bash
 npm run cypress:open
 ```
