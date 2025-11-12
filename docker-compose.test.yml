@@ -19,13 +19,18 @@ services:
       MYSQL_PASSWORD: testpass
     tmpfs: 
       - /var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -ptestpass --silent"]
+      interval: 2s
+      timeout: 2s
+      retries: 30
 
   backend-tests:
     build: ./server
     container_name: backend-tests
-    env_file: .env.test
     depends_on:
-      - db-test
+      db-test:
+        condition: service_healthy
     environment:
       NODE_ENV: test
       DB_HOST: db-test
@@ -36,7 +41,7 @@ services:
     command: ["npm", "test"]
 
   frontend-tests:
-    image: node:20
+    build: ./client
     working_dir: /app
     volumes:
       - ./client:/app
