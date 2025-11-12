@@ -57,8 +57,8 @@ describe("getAll", () => {
     });
 
     // TODO: Complete these tests
-    test('getAll return 200 and handly empty DB array gracefully', () => {expect(true).toBe(true);});
-    test('getAll return 500 when DB fails', () => {expect(true).toBe(true);});
+    test.todo('getAll return 200 and handly empty DB array gracefully');
+    test.todo('getAll return 500 when DB fails');
 })
 
 // getSpecificPattern tests
