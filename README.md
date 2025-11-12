@@ -226,3 +226,18 @@ These steps apply only if you wish to run **Pixel to Pattern** manually without 
 `docker compose -f docker-compose.test.yml down -v`
 ### Run backend unit tests
 From the server directory, run `npm run test` to run Jest unit tests locally.
+### Run E2E tests
+*These commands need to be run from the **root** of the project*
+#### Through Bash Terminal
+```bash
+npm run cypress:run
+```
+
+#### Throught Cypress GUI (useful for dev)
+```bash
+npm run cypress:open
+```
+1. Click the "E2E Testing" card
+1. Select a browser to view the app in
+1. Select a spec to run from the list, it will auto-run the tests anytime there are changes made to the spec
+![cypress-spec-list](image.png)
