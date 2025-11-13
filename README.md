@@ -224,15 +224,19 @@ These steps apply only if you wish to run **Pixel to Pattern** manually without 
 `docker compose -f docker-compose.test.yml up --exit-code-from backend-tests`
 3. Close Docker test services:
 `docker compose -f docker-compose.test.yml down -v`
-### Run backend unit tests and integration tests
+### Run backend unit tests
 #### Locally
-From the server directory, run `npm test` to run Jest unit tests locally.
+From the server directory, run `npm run test:unit` to run Jest unit tests locally.
 #### In Docker
-1. From the root, run `docker compose -f docker-compose.test.yml up backend-tests --abort-on-container-exit --exit-code-from backend-tests`
+1. From the root, run `docker compose -f docker-compose.test.yml up backend-unit-tests --abort-on-container-exit --exit-code-from backend-unit-tests`
 2. Clean up: `docker compose -f docker-compose.test.yml down -v`
 ### Run frontend unit tests
 #### Locally
 From the client directory, run `npm test` to run Jest unit tests locally.
 #### In Docker
 1. From the root, run `docker compose -f docker-compose.test.yml up frontend-tests --abort-on-container-exit --exit-code-from frontend-tests`
+2. Clean up: `docker compose -f docker-compose.test.yml down -v`
+### Run backend integration tests
+Only run the integration tests in the docker compose test.
+1. From the root, run `docker compose -f docker-compose.test.yml up db-test backend-integration  --abort-on-container-exit --exit-code-from backend-integration`
 2. Clean up: `docker compose -f docker-compose.test.yml down -v`

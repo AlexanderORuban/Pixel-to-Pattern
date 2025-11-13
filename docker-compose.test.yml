@@ -25,9 +25,9 @@ services:
       timeout: 2s
       retries: 30
 
-  backend-tests:
+  backend-integration:
     build: ./server
-    container_name: backend-tests
+    container_name: backend-integration
     depends_on:
       db-test:
         condition: service_healthy
@@ -39,7 +39,15 @@ services:
       DB_PASSWORD: testpass
       DB_DATABASE: test_db
     command: >
-      sh -lc "npm run test:ci"
+      sh -lc "npm run test:integration"
+
+  backend-unit-tests:
+    build: ./server
+    container_name: backend-unit-tests
+    environment:
+      NODE_ENV: test
+    command: >
+      sh -lc "npm run test:unit"
 
   frontend-tests:
     build: ./client
