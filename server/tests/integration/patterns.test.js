@@ -1,7 +1,7 @@
 import request from 'supertest';
-import { app } from '../app.js';
-import { Patterns } from '../models/patterns.js';
-import sequelize from '../models/db.js';
+import { app } from '../../app.js';
+import { Patterns } from '../../models/patterns.js';
+import sequelize from '../../models/db.js';
 
 // --- helpers ---
 async function resetDb() {

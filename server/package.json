@@ -4,8 +4,10 @@
   "main": "app.js",
   "module": "main.js",
   "scripts": {
-    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
-    "test:ci": "NODE_OPTIONS=--experimental-vm-modules jest --verbose --coverage",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --runInBand --verbose",
+    "test:unit": "node --experimental-vm-modules node_modules/jest/bin/jest.js --runInBand --verbose --testPathPattern=tests/unit",
+    "test:integration": "node --experimental-vm-modules node_modules/jest/bin/jest.js --runInBand --verbose --testPathPattern=tests/integration",
+    "test:coverage": "node --experimental-vm-modules node_modules/jest/bin/jest.js --runInBand --coverage --coverageReporters=text-summary",
     "dev": "nodemon server.js"
   },
   "author": "",
