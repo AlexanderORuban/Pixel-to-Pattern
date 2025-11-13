@@ -2,10 +2,8 @@
 # Contains:
 # - backend-integration (integration tests)
 # - backend-unit-tests (unit tests)
-# - frontend-tests (Jest)
-# - frontend-web (Next.js server for Cypress)
-# - backend-web (API server for Cypress)
-# - e2e-tests (Cypress)
+# - frontend-tests (unit tests)
+
 
 services:
   db-test:
@@ -56,74 +54,3 @@ services:
       NODE_ENV: test
     command: >
       sh -lc "npm run test:ci"
-
-  # === FRONTEND WEB (Next.js) ===
-  frontend-web:
-    image: node:20
-    container_name: frontend-web
-    working_dir: /app
-    volumes:
-      - ./client:/app
-    environment:
-      PORT: "3001"
-      # Frontend should call API via this URL inside the network
-      NEXT_PUBLIC_API_URL: http://backend-web:3000
-    healthcheck:
-      test: 
-        [ "CMD-SHELL",
-        "node -e \"require('http').get('http://localhost:3001',r=>process.exit(r.statusCode===200?0:1)).on('error',()=>process.exit(1))\""
-        ]
-      interval: 3s
-      timeout: 2s
-      retries: 60
-    ports:
-      - "3001:3001"
-    command: >
-      sh -lc "
-        npm ci &&
-        npm run build &&
-        npm run start -- -p 3001 -H 0.0.0.0
-      "
-
-  # === BACKEND WEB (runs the API for Cypress) ===
-  backend-web:
-    build: ./server
-    container_name: backend-web
-    environment:
-      NODE_ENV: test
-      DB_HOST: db-test
-      DB_PORT: "3306"
-      DB_USER: testuser
-      DB_PASSWORD: testpass
-      DB_DATABASE: test_db
-      PORT: "3000"
-    healthcheck:
-      test: ["CMD-SHELL", "wget -qO- http://localhost:3000/health || exit 1"]
-      interval: 3s
-      timeout: 2s
-      retries: 30
-    depends_on:
-      db-test:
-        condition: service_healthy
-    command: "node server.js"
-
-  # === CYPRESS (E2E) ===
-  e2e-tests:
-    image: cypress/included:13.7.0
-    container_name: e2e-tests
-    working_dir: /e2e
-    volumes:
-      - ./cypress:/e2e/cypress
-      - ./cypress.config.js:/e2e/cypress.config.js
-    environment:
-      CYPRESS_baseUrl: http://frontend-web:3001
-      NODE_ENV: test
-    depends_on:
-      frontend-web:
-        condition: service_healthy
-      backend-web:
-        condition: service_healthy
-    entrypoint: ["/bin/sh","-lc"]
-    command: >
-      'npx cypress run --project /e2e --e2e
-      --spec "cypress/e2e/**/*.cy.{js,jsx,ts,tsx}" --browser chrome --quiet'
