@@ -218,16 +218,28 @@ These steps apply only if you wish to run **Pixel to Pattern** manually without 
   ```
 ## Testing
 ### Run all tests in Docker
-1. *(If needed)* force Docker to build/rebuild docker-compose.test image: 
-`docker compose -f docker-compose.test.yml build --no-cache backend-tests`
+1. *(If needed)* force Docker to build/rebuild clean docker-compose.test image: 
+`docker compose -f docker-compose.test.yml build --no-cache`
 2. Spin up Docker test services:
-`docker compose -f docker-compose.test.yml up --abort-on-container-exit`
+`docker compose -f docker-compose.test.yml up --exit-code-from backend-tests`
 3. Close Docker test services:
 `docker compose -f docker-compose.test.yml down -v`
 ### Run backend unit tests
-From the server directory, run `npm run test` to run Jest unit tests locally.
+#### Locally
+From the server directory, run `npm run test:unit` to run Jest unit tests locally.
+#### In Docker
+1. From the root, run `docker compose -f docker-compose.test.yml up backend-unit-tests --abort-on-container-exit --exit-code-from backend-unit-tests`
+2. Clean up: `docker compose -f docker-compose.test.yml down -v`
 ### Run frontend unit tests
-From the client directory, run `npm test`
+#### Locally
+From the client directory, run `npm test` to run Jest unit tests locally.
+#### In Docker
+1. From the root, run `docker compose -f docker-compose.test.yml up frontend-tests --abort-on-container-exit --exit-code-from frontend-tests`
+2. Clean up: `docker compose -f docker-compose.test.yml down -v`
+### Run backend integration tests
+Only run the integration tests in the docker compose test.
+1. From the root, run `docker compose -f docker-compose.test.yml up db-test backend-integration  --abort-on-container-exit --exit-code-from backend-integration`
+2. Clean up: `docker compose -f docker-compose.test.yml down -v`
 ### Run E2E tests
 *These commands need to be run from the **root** of the project*
 #### Option 1 | Through Bash Terminal
@@ -243,3 +255,4 @@ npm run cypress:open
 1. Select a browser to view the app in
 1. Select a spec to run from the list, it will auto-run the tests anytime there are changes made to the spec
 ![cypress-spec-list](image.png)
+

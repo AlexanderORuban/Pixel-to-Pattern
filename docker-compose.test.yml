@@ -5,31 +5,60 @@
 # - (planned) e2e tests
 
 # (if needed) TO FORCE DOCKER TO REBUILD IMAGE: docker compose -f docker-compose.test.yml build --no-cache backend-tests
-# TO RUN : docker compose -f docker-compose.test.yml up --abort-on-container-exit
+# TO RUN : docker compose -f docker-compose.test.yml up --abort-on-container-exit --exit-code-from backend-tests
 # TO CLOSE: docker compose -f docker-compose.test.yml down -v
 
-# define services
 services:
   db-test:
     image: mysql:8.0
+    container_name: db-test
     environment:
       MYSQL_ROOT_PASSWORD: testpass
       MYSQL_DATABASE: test_db
-  backend-tests:
+      MYSQL_USER: testuser
+      MYSQL_PASSWORD: testpass
+    tmpfs: 
+      - /var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -ptestpass --silent"]
+      interval: 2s
+      timeout: 2s
+      retries: 30
+
+  backend-integration:
     build: ./server
-    env_file: .env.test
+    container_name: backend-integration
     depends_on:
-      - db-test
-    command: ["npm", "test"]
-  frontend-tests:
-    image: node:20
-    working_dir: /app
-    volumes:
-      - ./client:/app
+      db-test:
+        condition: service_healthy
     environment:
-      - CI=true
+      NODE_ENV: test
+      DB_HOST: db-test
+      DB_PORT: "3306"
+      DB_USER: testuser
+      DB_PASSWORD: testpass
+      DB_DATABASE: test_db
     command: >
-      sh -lc "npm ci && npm run test:ci"
+      sh -lc "npm run test:integration"
+
+  backend-unit-tests:
+    build: ./server
+    container_name: backend-unit-tests
+    environment:
+      NODE_ENV: test
+    command: >
+      sh -lc "npm run test:unit"
+
+  frontend-tests:
+    build: ./client
+    container_name: frontend-tests
+    ports:
+      - "3001:3001"
+    environment:
+      CI: "true"
+      NODE_ENV: test
+    command: >
+      sh -lc "npm run test:ci"
 
 
 

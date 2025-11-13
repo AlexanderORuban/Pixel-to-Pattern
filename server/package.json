@@ -4,7 +4,10 @@
   "main": "app.js",
   "module": "main.js",
   "scripts": {
-    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --runInBand --verbose",
+    "test:unit": "node --experimental-vm-modules node_modules/jest/bin/jest.js --runInBand --verbose tests/unit",
+    "test:integration": "node --experimental-vm-modules node_modules/jest/bin/jest.js --runInBand --verbose tests/integration",
+    "test:coverage": "node --experimental-vm-modules node_modules/jest/bin/jest.js --runInBand --coverage --coverageReporters=text-summary",
     "dev": "nodemon server.js"
   },
   "author": "",
@@ -21,6 +24,7 @@
   "type": "module",
   "devDependencies": {
     "jest": "^30.2.0",
-    "nodemon": "^3.1.10"
+    "nodemon": "^3.1.10",
+    "supertest": "^7.1.4"
   }
 }
