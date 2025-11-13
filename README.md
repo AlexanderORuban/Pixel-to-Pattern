@@ -247,7 +247,9 @@ Only run the integration tests in the docker compose test.
 1. From the root, run `docker compose -f docker-compose.test.yml up db-test backend-integration  --abort-on-container-exit --exit-code-from backend-integration`
 2. Clean up: `docker compose -f docker-compose.test.yml down -v`
 ### Run E2E tests
-*These commands need to be run from the **root** of the project*
+- Run from the *root* of the project
+- The app needs to be running in docker locally *before* testing
+- Remember to run `npm i` first
 #### Option 1 | Through Bash Terminal
 ```bash
 npm run cypress:run
