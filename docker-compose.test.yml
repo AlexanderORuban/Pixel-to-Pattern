@@ -38,7 +38,8 @@ services:
       DB_USER: testuser
       DB_PASSWORD: testpass
       DB_DATABASE: test_db
-    command: ["npm", "test"]
+    command: >
+      sh -lc "npm run test:ci"
 
   frontend-tests:
     build: ./client
