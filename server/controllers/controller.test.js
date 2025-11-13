@@ -57,8 +57,27 @@ describe("getAll", () => {
     });
 
     // TODO: Complete these tests
-    test.todo('getAll return 200 and handly empty DB array gracefully');
-    test.todo('getAll return 500 when DB fails');
+    test('getAll return 200 and handly empty DB array gracefully', async () => {
+      // Arrange: mock model layer behavior
+      const fakeData = [];
+      mockModel.getAllPatterns.mockResolvedValue(fakeData);
+
+      // Act: Call controller
+      await getAll(req, res);
+
+      // Assert
+      expect(res.status).toHaveBeenCalledWith(200);
+      expect(res.json).toHaveBeenCalledWith(fakeData);
+    });
+
+    test('getAll return 500 when DB fails', async () => {
+      mockModel.getAllPatterns.mockRejectedValueOnce(new Error('DB down'));
+
+      await getAll(req, res);
+
+      expect(res.status).toHaveBeenCalledWith(500);
+      expect(res.json).toHaveBeenCalledWith({ error: 'DB down' });
+    });
 })
 
 // getSpecificPattern tests
