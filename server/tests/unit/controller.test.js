@@ -66,15 +66,18 @@ describe("UploadPattern", () => {
   test.todo("error 500, error: err.message");
 });
 
-// getSpecificPattern tests
-// - return 200 and pattern
-// - return 200 and empty? 
-// - return 500 error when db fails
+describe("getSpecificPattern", () => {
+  test.todo("return 200 and pattern");
+  test.todo("return 200 and empty? ");
+  test.todo("return 500 error when db fails");
+});
 
-// updatePatternController tests
-// - successful input, 204
-// - db error 500
+describe("updatePatternController", () => {
+  test.todo("successful input, 204");
+  test.todo("db error 500");
+});
 
-// deletePattern tests
-// - delete successful, 200 and message: "Pattern deleted successfully"
-// - error 500, message: "Error deleting pattern", and error object passed
+describe("deletePattern tests", () => {
+  test.todo("delete successful, 200 and message: 'Pattern deleted successfully'");
+  test.todo("error 500, message: 'Error deleting pattern', and error object passed");
+});
