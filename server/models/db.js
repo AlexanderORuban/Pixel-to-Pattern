@@ -30,7 +30,7 @@ const sequelize = new Sequelize(database, user, password, {
         host,
         port,
         dialect: 'mysql',
-        logging: query => console.log(`SQL: ${query}` )
+        logging: false,
     }
 );
 
