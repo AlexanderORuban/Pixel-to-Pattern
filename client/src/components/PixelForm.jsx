@@ -169,19 +169,21 @@ export default function PixelForm() {
 
             {/* Canvas Grid and pixels */}
             <Box sx={{ backgroundColor: 'whitesmoke', width: '100%', padding: '2em' }}>
-                <Box sx={{
-                    display: 'grid',
-                    justifyContent: 'center',
-                    justifyItems: 'center',
-                    width: 'fit-content',
-                    margin: ' auto',
-                    border: '1px solid #ccc',
-                    gridTemplateColumns: `repeat(${canvasWidth}, 25px)`,
-                    gridTemplateRows: `repeat(${canvasHeight}, 25px)`,
-                    maxWidth: '626px',
-                    maxHeight: '626px',
-                    overflow: 'auto'
-                }}>
+                <Box 
+                    data-testid="pixel-canvas"
+                    sx={{
+                        display: 'grid',
+                        justifyContent: 'center',
+                        justifyItems: 'center',
+                        width: 'fit-content',
+                        margin: ' auto',
+                        border: '1px solid #ccc',
+                        gridTemplateColumns: `repeat(${canvasWidth}, 25px)`,
+                        gridTemplateRows: `repeat(${canvasHeight}, 25px)`,
+                        maxWidth: '626px',
+                        maxHeight: '626px',
+                        overflow: 'auto'}}
+                >
                     {pixelFill.map((currentColor, i) => (
                         showGrid ?
                             <div

@@ -13,7 +13,9 @@ describe('Create Pattern Flow', () => {
   it('can draw and submit a new pattern', () => {
     cy.contains('Create').click();
 
-    cy.get()
+    cy.get('[data-testid="paint-bucket"]').click();
+
+    cy.get('[data-testid="pixel-canvas"]').click(50,50)
   })
 });
 // describe('can create a new pattern', () => {
