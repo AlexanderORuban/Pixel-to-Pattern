@@ -1,19 +1,18 @@
 services:
   frontend:
-    image: ghcr.io/alexanderoruban/pixel-to-pattern-frontend:latest
+    image: ghcr.io/auglebobaugles/pixel-to-pattern-frontend:latest
     container_name: frontend
     ports:
       - "80:3001"
     environment:
       - NODE_ENV=production
       - PORT=3001
-      - NEXT_PUBLIC_API_BASE_URL=http://<YOUR_VM_IP>:3000
     depends_on:
       - backend
     restart: unless-stopped
 
   backend:
-    image: ghcr.io/alexanderoruban/pixel-to-pattern-backend:latest
+    image: ghcr.io/auglebobaugles/pixel-to-pattern-backend:latest
     container_name: backend
     ports:
       - "3000:3000"
@@ -29,8 +28,10 @@ services:
     env_file:
       - .env
     environment:
-      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
       MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
     volumes:
       - db_data:/var/lib/mysql
     restart: unless-stopped

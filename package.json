@@ -2,7 +2,9 @@
   "scripts": {
     "dev": "concurrently \"npm run server\" \"npm run client\"",
     "server": "npm run dev --prefix server",
-    "client": "PORT=3001 npm run dev --prefix client"
+    "client": "PORT=3001 npm run dev --prefix client",
+    "cypress:open": "cypress open",
+    "cypress:run": "cypress run"
   },
   "dependencies": {
     "dotenv": "^17.2.3",
@@ -10,6 +12,7 @@
     "sequelize": "^6.37.7"
   },
   "devDependencies": {
-    "concurrently": "^9.2.1"
+    "concurrently": "^9.2.1",
+    "cypress": "^15.6.0"
   }
 }

@@ -1,0 +1,14 @@
+node_modules
+dist
+build
+coverage
+.tmp
+.cache
+.next
+out
+.vscode
+.git
+npm-debug.log
+yarn-error.log
+.pnpm-store
+.eslintcache

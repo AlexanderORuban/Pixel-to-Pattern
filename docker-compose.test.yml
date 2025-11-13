@@ -1,0 +1,56 @@
+# This docker compose sets up one-shot test runner containers and test overrides
+# Contains:
+# - backend-integration (integration tests)
+# - backend-unit-tests (unit tests)
+# - frontend-tests (unit tests)
+
+
+services:
+  db-test:
+    image: mysql:8.0
+    container_name: db-test
+    environment:
+      MYSQL_ROOT_PASSWORD: testpass
+      MYSQL_DATABASE: test_db
+      MYSQL_USER: testuser
+      MYSQL_PASSWORD: testpass
+    tmpfs:
+      - /var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -ptestpass --silent"]
+      interval: 2s
+      timeout: 2s
+      retries: 30
+
+  backend-integration:
+    build: ./server
+    container_name: backend-integration
+    depends_on:
+      db-test:
+        condition: service_healthy
+    environment:
+      NODE_ENV: test
+      DB_HOST: db-test
+      DB_PORT: "3306"
+      DB_USER: testuser
+      DB_PASSWORD: testpass
+      DB_DATABASE: test_db
+    command: >
+      sh -lc "npm run test:integration"
+
+  backend-unit-tests:
+    build: ./server
+    container_name: backend-unit-tests
+    environment:
+      NODE_ENV: test
+    command: >
+      sh -lc "npm run test:unit"
+
+  frontend-tests:
+    build: ./client
+    container_name: frontend-tests
+    environment:
+      CI: "true"
+      NODE_ENV: test
+    command: >
+      sh -lc "npm run test:ci"

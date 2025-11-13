@@ -68,6 +68,7 @@ export default function PixelDisplay({ patternInfo, displayWidth, displayHeight 
     return (
         <>
             <canvas
+                data-testid="pattern-canvas"
                 ref={canvasRef}
                 style={{ imageRendering: "pixelated", width: displayWidth, height: displayHeight }}
             ></canvas>

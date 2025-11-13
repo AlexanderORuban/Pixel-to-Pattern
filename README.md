@@ -54,11 +54,7 @@ You will need to create both a `.env` file in the root directory and a `.env.loc
 - `DB_PORT`: The port number the database is running on.  
 - `SERVER_PORT`: The port number for the backend server (default: 3000).
 
-### Client `.env.local` (example.env.local provided in client)
-
-**Required Variables:**
-- `NEXT_PUBLIC_API_BASE_URL`: The base URL for API fetch requests (`http://localhost:3000` for local development or `http://<VM_IP>:3000` for deployment).  
-- `PORT`: The port number for the frontend server.
+**Note:** The frontend uses relative URLs with Next.js rewrites to communicate with the backend. No environment variables are required for the client in Docker setups.
 
 ---
 
@@ -72,12 +68,11 @@ You can run the entire Pixel to Pattern stack locally using Docker Compose.
    ```
 2. Ensure Docker and Docker Compose are installed.
 3. Create a `.env` file in the root directory with the necessary credentials listed above.
-4. Create a `.env.local` file in the client directory with the credentials listed above. 
-5. Build and start all services:
+4. Build and start all services:
    ```bash
    docker compose up --build
    ```
-6. Visit [http://localhost:3001](http://localhost:3001) to access the application.
+5. Visit [http://localhost:3001](http://localhost:3001) to access the application.
 
 To stop containers:
 ```bash
@@ -96,18 +91,15 @@ To restart containers without rebuilding:
 ```bash
 docker compose restart
 ```
-
 ---
-
 ## Local Setup (Non-Docker)
 
 These steps apply only if you wish to run **Pixel to Pattern** manually without Docker.
-
 1. **Fork and clone** this repository:
    ```bash
    git clone https://github.com/AlexanderORuban/Pixel-to-Pattern.git
    ```
-2. In the root directory, create a `.env` file and a `.env.local` file in the client directory as described above.  
+2. In the root directory, create a `.env` file as described above.  
 3. **Install dependencies** in the root, `server/`, and `client/` directories:
    ```bash
    npm install
@@ -132,17 +124,15 @@ These steps apply only if you wish to run **Pixel to Pattern** manually without 
    ```
 3. **Build and push the backend container:**
    ```bash
-   docker build --no-cache -t ghcr.io/<UserName>/<BackendContainer>:latest ./server
-   docker push ghcr.io/<UserName>/<BackendContainer>:latest
-   ```
-4. **Build and push the frontend container:**
-   Replace the `.env.local` base URL with your VM’s IP address, or use the following commands:
-   ```bash
-   docker build --no-cache      -t ghcr.io/<Username>/<FrontendContainer>:latest      --build-arg NEXT_PUBLIC_API_BASE_URL=http://<VM_IP>:3000      ./client
-   docker run --rm ghcr.io/<UserName>/<FrontendContainer>:latest printenv | grep NEXT_PUBLIC_API_BASE_URL
-   docker push ghcr.io/<UserName>/<FrontendContainer>:latest
+   docker build --no-cache -t ghcr.io/<UserName>/pixel-to-pattern-backend:latest ./server
+   docker push ghcr.io/<UserName>/pixel-to-pattern-backend:latest
    ```
 
+4. **Build and push the frontend container:**
+   ```bash
+   docker build --no-cache -t ghcr.io/<Username>/pixel-to-pattern-frontend ./client
+   docker push ghcr.io/<UserName>/pixel-to-pattern-frontend:latest
+   ```
 ---
 
 ## VM Setup
@@ -212,7 +202,7 @@ These steps apply only if you wish to run **Pixel to Pattern** manually without 
   ```
 
 - **Environment variables not loading:**  
-  Ensure `.env` and `.env.local` files are in the correct directories and not ignored by `.dockerignore`.
+  Ensure the `.env` file is in the root directory and not ignored by `.dockerignore`.
 
 - **Containers not starting:**  
   Check logs for detailed errors:
@@ -226,3 +216,50 @@ These steps apply only if you wish to run **Pixel to Pattern** manually without 
   ```bash
   docker exec -it db mysql -u root -p
   ```
+## Testing
+### Run all unit and integration tests in Docker
+1. *(If needed)* force Docker to build/rebuild clean docker-compose.test image: 
+```
+docker compose -f docker-compose.test.yml build --no-cache
+```
+2. Spin up Docker test services:
+```
+docker compose -f docker-compose.test.yml up
+```
+3. Close Docker test services:
+```
+docker compose -f docker-compose.test.yml down -v
+```
+### Run backend unit tests
+#### Locally
+From the server directory, run `npm run test:unit` to run Jest unit tests locally.
+#### In Docker
+1. From the root, run `docker compose -f docker-compose.test.yml up backend-unit-tests --abort-on-container-exit --exit-code-from backend-unit-tests`
+2. Clean up: `docker compose -f docker-compose.test.yml down -v`
+### Run frontend unit tests
+#### Locally
+From the client directory, run `npm test` to run Jest unit tests locally.
+#### In Docker
+1. From the root, run `docker compose -f docker-compose.test.yml up frontend-tests --abort-on-container-exit --exit-code-from frontend-tests`
+2. Clean up: `docker compose -f docker-compose.test.yml down -v`
+### Run backend integration tests
+Only run the integration tests in the docker compose test.
+1. From the root, run `docker compose -f docker-compose.test.yml up db-test backend-integration  --abort-on-container-exit --exit-code-from backend-integration`
+2. Clean up: `docker compose -f docker-compose.test.yml down -v`
+### Run E2E tests
+- Run from the *root* of the project
+- The app needs to be running in docker locally *before* testing
+- Remember to run `npm i` first
+#### Option 1 | Through Bash Terminal
+```bash
+npm run cypress:run
+```
+
+#### Option 2 | Through Cypress GUI (useful for dev)
+```bash
+npm run cypress:open
+```
+1. Click the "E2E Testing" card
+1. Select a browser to view the app in
+1. Select a spec to run from the list, it will auto-run the tests anytime there are changes made to the spec
+![cypress-spec-list](image.png)

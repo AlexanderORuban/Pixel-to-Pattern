@@ -1,13 +1,12 @@
 services:
   frontend:
-    build: ./client              
+    build: ./client
     container_name: frontend
     ports:
       - "3001:3001"
     environment:
       - NODE_ENV=production
       - PORT=3001
-      - NEXT_PUBLIC_API_BASE_URL=http://localhost:3000
     depends_on:
       - backend
     restart: unless-stopped
@@ -31,6 +30,8 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
       MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
     volumes:
       - db_data:/var/lib/mysql
     restart: unless-stopped
