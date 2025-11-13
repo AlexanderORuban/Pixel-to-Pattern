@@ -218,12 +218,20 @@ These steps apply only if you wish to run **Pixel to Pattern** manually without 
   ```
 ## Testing
 ### Run all tests in Docker
+Note: It is not recommended to run all the tests at once. It will take a long time!
+
 1. *(If needed)* force Docker to build/rebuild clean docker-compose.test image: 
-`docker compose -f docker-compose.test.yml build --no-cache`
+```
+docker compose -f docker-compose.test.yml build --no-cache
+```
 2. Spin up Docker test services:
-`docker compose -f docker-compose.test.yml up --exit-code-from backend-tests`
+```
+docker compose -f docker-compose.test.yml up --exit-code-from backend-tests
+```
 3. Close Docker test services:
-`docker compose -f docker-compose.test.yml down -v`
+```
+docker compose -f docker-compose.test.yml down -v
+```
 ### Run backend unit tests
 #### Locally
 From the server directory, run `npm run test:unit` to run Jest unit tests locally.
@@ -256,3 +264,8 @@ npm run cypress:open
 1. Select a spec to run from the list, it will auto-run the tests anytime there are changes made to the spec
 ![cypress-spec-list](image.png)
 
+Docker E2E from root:
+```bash
+docker compose -f docker-compose.test.yml up db-test backend-web frontend-web e2e-tests \
+  --abort-on-container-exit --exit-code-from e2e-tests
+```
