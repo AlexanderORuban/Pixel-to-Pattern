@@ -54,14 +54,36 @@ describe('Pattern API integration', () => {
             })
             .set('Content-Type', 'application/json');
 
-            expect(res.status).toBe(201);
+        expect(res.status).toBe(201);
         
+        // count results
         const allResults = await request(app).get('/patterns');
         expect(allResults.status).toBe(200);
         expect(allResults.body.length).toBe(3);
     });
 
     test('DELETE /patterns/:id deletes a row', async () => {
-        expect(true).toBe(true);
+        const created = await Patterns.create({
+            pattern_name: 'to-delete',
+            pattern_info: { rows: ['z'] },
+            author: 'tester',
+            description: 'temp',
+        });
+
+        const id = created.pattern_ID;
+
+        // count results
+        const allResults = await request(app).get('/patterns');
+        expect(allResults.status).toBe(200);
+        expect(allResults.body.length).toBe(3);
+
+        // delete
+        const delRes = await request(app).delete(`/patterns/${id}`);
+        expect(delRes.status).toBe(200);
+
+        // count results
+        const allResultsAfter = await request(app).get('/patterns');
+        expect(allResultsAfter.status).toBe(200);
+        expect(allResultsAfter.body.length).toBe(2);
     });
 });
