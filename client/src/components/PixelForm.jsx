@@ -140,7 +140,10 @@ export default function PixelForm() {
                     <ToggleButton value="pencil" aria-label='select pencil'>
                         <DrawIcon />
                     </ToggleButton>
-                    <ToggleButton value="fillBucket" aria-label='select fill bucket'>
+                    <ToggleButton 
+                        data-testid="paint-bucket" 
+                        value="fillBucket" 
+                        aria-label='select fill bucket'>
                         <FormatColorFillIcon />
                     </ToggleButton>
                     <ToggleButton value="eraser" aria-label='select eraser'>
@@ -183,6 +186,7 @@ export default function PixelForm() {
                         showGrid ?
                             <div
                                 key={i}
+                                data-testid="pixel"
                                 onClick={() => handlePixelEvent(i)}
                                 style={{
                                     width: '25px',
@@ -190,10 +194,9 @@ export default function PixelForm() {
                                     border: '1px solid #ddd',
                                     backgroundColor: currentColor
                                 }}>
-
                             </div>
                             :
-                            <div
+                            <div 
                                 key={i}
                                 onClick={() => handlePixelEvent(i)}
                                 style={{
@@ -202,7 +205,6 @@ export default function PixelForm() {
                                     border: 'none',
                                     backgroundColor: currentColor
                                 }}>
-
                             </div>
                     ))}
                 </Box>
@@ -210,11 +212,33 @@ export default function PixelForm() {
 
             {/* Name and description*/}
             <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1em', margin: '1em 2em 2em' }}>
-                <TextField onChange={(e) => setName(e.target.value)} value={name} label="Name Your Pattern"></TextField>
-                <TextField onChange={(e) => setAuthor(e.target.value)} value={author} label="Author"></TextField>
-                <TextField onChange={(e) => setDescription(e.target.value)} value={description} multiline rows={3} sx={{ width: '50%', minWidth: '250px' }} label="Description"></TextField>
+                <TextField 
+                    data-testid="pattern-name"
+                    onChange={(e) => setName(e.target.value)} 
+                    value={name} label="Name Your Pattern"
+                />
+                <TextField 
+                    data-testid="pattern-author"
+                    onChange={(e) => setAuthor(e.target.value)} 
+                    value={author} label="Author"
+                />
+                <TextField
+                    data-testid="pattern-description" 
+                    onChange={(e) => setDescription(e.target.value)} 
+                    value={description} 
+                    multiline 
+                    rows={3} 
+                    sx={{ width: '50%', minWidth: '250px' }} label="Description"
+                />
                 
-                <Button size='large' variant='contained' sx={{ alignSelf: 'end' }} endIcon={<SendIcon />} onClick={submitPixelForm}>Generate Pattern</Button>
+                <Button 
+                    data-testid="submit-pattern"
+                    size='large' 
+                    variant='contained' 
+                    sx={{ alignSelf: 'end' }} 
+                    endIcon={<SendIcon />} 
+                    onClick={submitPixelForm}>Generate Pattern
+                </Button>
             </Box>
         </Card>
     )
