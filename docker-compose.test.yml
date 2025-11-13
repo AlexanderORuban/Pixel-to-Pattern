@@ -43,9 +43,9 @@ services:
 
   frontend-tests:
     build: ./client
-    working_dir: /app
-    volumes:
-      - ./client:/app
+    container_name: frontend-tests
+    ports:
+      - "3001:3001"
     environment:
       CI: "true"
       NODE_ENV: test
