@@ -7,7 +7,7 @@ import { fileURLToPath } from 'url';
 // Resolve the project root .env path
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-dotenv.config({ path: path.join(__dirname, '../../.env') });
+dotenv.config({ path: path.join(__dirname, '../../.env'), quiet: true });
 
 const host = process.env.DB_HOST;
 const port = process.env.DB_PORT;
@@ -20,7 +20,7 @@ const makeDb = async () => {
     const connection = await mysql.createConnection({ host, user, password });
     await connection.query(`CREATE DATABASE IF NOT EXISTS \`${database}\`;`);
     await connection.end();
-    console.log(`Database ${database} is ready.`);
+    // console.log(`Database ${database} is ready.`);
 };
 
 await makeDb();
@@ -36,7 +36,7 @@ const sequelize = new Sequelize(database, user, password, {
 
 try {
     await sequelize.authenticate();
-    console.log('Connected successfully');
+    // console.log('Connected successfully');
 } catch (error) {
     console.error('Unable to connect:', error);
 }
