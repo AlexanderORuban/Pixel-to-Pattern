@@ -224,7 +224,7 @@ docker compose -f docker-compose.test.yml build --no-cache
 ```
 2. Spin up Docker test services:
 ```
-docker compose -f docker-compose.test.yml up --exit-code-from backend-tests
+docker compose -f docker-compose.test.yml up
 ```
 3. Close Docker test services:
 ```
