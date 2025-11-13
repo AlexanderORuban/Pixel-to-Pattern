@@ -141,6 +141,7 @@ export default function PatternPage({ params }) {
 
               {/* delete button */}
               <button
+                data-testid="delete-pattern"
                 onClick={handleDelete}
                 style={{
                   background: "red",

@@ -14,31 +14,33 @@ describe('Create Pattern Flow', () => {
     cy.contains('Create').click();
 
     cy.get('[data-testid="paint-bucket"]').click();
+    cy.get('[data-testid="pixel-canvas"]').click(50,50);
+    cy.get('[data-testid="pattern-name"]').type("Tartarus");
+    cy.get('[data-testid="pattern-description"]').type("Testing Cypress!")
 
-    cy.get('[data-testid="pixel-canvas"]').click(50,50)
+    cy.get('[data-testid="submit-pattern"]').click();
+
+    cy.url().should("match", /\/view\/\d+$/)
+
+    cy.get('[data-testid="pattern-canvas"]').should('exist')
+    cy.contains("Tartarus");
+    cy.contains("Testing Cypress!")
+    cy.contains("Row 1: 10 S.C. in #000000")
+
+    cy.get('[data-testid="delete-pattern"]').click()
+  })
+
+  it('can delete a pattern after making it', () => {
+    cy.contains('Create').click();
+
+    cy.get('[data-testid="pixel-canvas"]').click(50,50);
+    cy.get('[data-testid="pattern-name"]').type("a bug?");
+    cy.get('[data-testid="pattern-description"]').type("Shortest lived post in history.. just like a bug")
+
+    cy.get('[data-testid="submit-pattern"]').click();
+
+    cy.get('[data-testid="delete-pattern"]').click();
+    cy.url().should("match", /\/$/)
+    cy.contains('Shortest lived post in history..').should('not.exist')
   })
 });
-// describe('can create a new pattern', () => {
-//   beforeEach(() => {
-//     cy.visit('http://localhost:3001/create')
-//   })
-
-//   // selet painbucket
-//   it('select paintBucket', () => {
-//     cy.get()    // find element
-//       .click()  // interact
-//       .should() // assert
-//   });
-
-  // chose color
-  // dump color
-  // fill in pattern name
-  // fill in author name
-  // fill in description
-  // click generate pattern
-
-// })
-// can create post
-  // can view post
-// can delete post
-  // can no longer view post
