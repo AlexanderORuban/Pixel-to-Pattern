@@ -5,6 +5,21 @@ Let the creativity flow.
 
 ---
 
+## Table of Contents
+
+- [Features](#features)
+- [Tech Stack](#tech-stack)
+- [Environment Variables](#environment-variables)
+- [Running Locally with Docker Compose](#running-locally-with-docker-compose)
+- [Local Setup (Non-Docker)](#local-setup-non-docker)
+- [Deployment Process](#deployment-process)
+- [VM Setup](#vm-setup)
+- [Troubleshooting](#troubleshooting)
+- [Manual Testing](#manual-testing)
+- [Automated Testing Pipeline (GitHub Actions)](#automated-testing-pipeline-github-actions)
+
+---
+
 ## Features
 
 ### Create  
@@ -216,7 +231,10 @@ These steps apply only if you wish to run **Pixel to Pattern** manually without 
   ```bash
   docker exec -it db mysql -u root -p
   ```
-## Testing
+
+---
+
+## Manual Testing
 ### Run all unit and integration tests in Docker
 1. *(If needed)* force Docker to build/rebuild clean docker-compose.test image: 
 ```
@@ -263,3 +281,32 @@ npm run cypress:open
 1. Select a browser to view the app in
 1. Select a spec to run from the list, it will auto-run the tests anytime there are changes made to the spec
 ![cypress-spec-list](image.png)
+
+---
+
+## Automated Testing Pipeline (GitHub Actions)
+
+This project uses a GitHub Actions workflow to automatically run all tests on every push and pull request to the `main` and `development` branches. The workflow is located in: 
+
+.github/workflows/test.yml
+
+The pipeline runs all core test suites, including:
+- Backend unit tests (Jest)
+- Backend integration tests (API + MySQL using Supertest)
+- Frontend unit tests (React Testing Library + Jest)
+- End-to-end tests (Cypress)
+
+Each group of tests runs in its own job using Docker containers to ensure a consistent and reproducible environment. This mirrors the local testing setup provided in `docker-compose.test.yml` and ensures that the application behaves the same in local development and continuous integration.
+
+### How the Workflow Operates
+
+- Triggers on all pushes to `main` or `development` branches.
+- Triggers on all pull requests opened against `main` or `development` branches.
+- Builds the required test containers for backend and frontend tests.
+- Spins up a test database for integration tests.
+- Starts the full application for end-to-end tests.
+- Blocks merges if any test suite fails.
+
+### Viewing Test Results
+
+All test results and logs are available in the GitHub “Actions” tab. Each job reports its status independently, making it easy to identify and troubleshoot failures. This ensures that both branches remain stable and that all new code is tested before being merged.
