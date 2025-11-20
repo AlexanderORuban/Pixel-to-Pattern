@@ -136,9 +136,15 @@ jobs:
           echo "Waiting for frontend..."
           timeout 60 bash -c 'until curl -s http://localhost:3001/ > /dev/null; do sleep 2; done'
 
+      # Install dependencies for Cypress (runs outside Docker)
+      - name: Install Cypress dependencies
+        run: npm ci
+        working-directory: ./client
+
       # Run the end-to-end tests using Cypress and full application
       - name: Run Cypress E2E tests
-        run: docker compose run --rm -e CYPRESS_baseUrl=http://frontend:3001 e2e npm run cypress:run
+        run: npm run cypress:run
+        working-directory: ./client
 
       # Clean up the test containers after runtime
       - name: Shutdown app stack
