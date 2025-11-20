@@ -14,6 +14,13 @@ on:
 jobs:
   backend-tests:
     runs-on: ubuntu-latest
+    env:
+      # Test environment variables for backend tests
+      DB_HOST: db-test
+      DB_USER: testuser
+      DB_PASSWORD: testpass
+      DB_DATABASE: test_db
+      NODE_ENV: test
 
     steps:
       - uses: actions/checkout@v3
@@ -48,10 +55,15 @@ jobs:
       # Always clean up the test containers even if the tests fail
       - name: Cleanup test containers
         if: always()
-        run: docker compose -f docker-compose.test.yml down -v
+        run: docker compose -f docker-compose.test.yml down -v || true
+
 
   frontend-tests:
     runs-on: ubuntu-latest
+    env:
+      # Test environment variables for frontend tests
+      NODE_ENV: test
+      CI: "true"
 
     steps:
       - uses: actions/checkout@v3
@@ -82,11 +94,19 @@ jobs:
       # Always clean up the test containers even if the tests fail
       - name: Cleanup
         if: always()
-        run: docker compose -f docker-compose.test.yml down -v
+        run: docker compose -f docker-compose.test.yml down -v || true
+
 
   e2e-tests:
     runs-on: ubuntu-latest
     needs: [backend-tests, frontend-tests] # Only runs the E2E tests if unit and integration tests pass
+    env:
+      # Test environment variables for E2E
+      DB_HOST: db-test
+      DB_USER: testuser
+      DB_PASSWORD: testpass
+      DB_DATABASE: test_db
+      NODE_ENV: test
 
     steps:
       - uses: actions/checkout@v3
@@ -114,4 +134,4 @@ jobs:
       # Clean up the test containers after runtime
       - name: Shutdown app stack
         if: always()
-        run: docker compose down
+        run: docker compose down || true
