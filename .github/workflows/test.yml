@@ -1,5 +1,9 @@
 name: Automated Testing Pipeline
 
+defaults:
+  run:
+    working-directory: ${{ github.workspace }}
+
 # Workflow triggers only on pull requests and pushes to main or development branches
 on:
   push:
