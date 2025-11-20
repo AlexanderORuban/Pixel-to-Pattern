@@ -107,6 +107,7 @@ jobs:
       DB_PASSWORD: testpass
       DB_DATABASE: test_db
       NODE_ENV: test
+      NEXT_PUBLIC_API_BASE_URL: http://backend:3000   # required for Next.js rewrites
 
     steps:
       - uses: actions/checkout@v3
@@ -119,6 +120,7 @@ jobs:
           echo "DB_PASSWORD=testpass" >> .env
           echo "DB_DATABASE=test_db" >> .env
           echo "NODE_ENV=test" >> .env
+          echo "NEXT_PUBLIC_API_BASE_URL=http://backend:3000" >> .env    # <-- REQUIRED
 
       # Install dependencies so Cypress exists on the GitHub runner
       - name: Install dependencies
