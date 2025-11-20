@@ -14,6 +14,14 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      # Debug: Validate that docker-compose.test.yml exists and loads correctly
+      - name: Validate compose file
+        run: |
+          echo "Listing files..."
+          ls -al .
+          echo "Validating docker-compose.test.yml..."
+          docker compose -f docker-compose.test.yml config
+
       # Build the backend test containers from docker-compose.test.yml
       - name: Build test containers
         run: docker compose -f docker-compose.test.yml build
@@ -40,6 +48,14 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+
+      # Debug: Validate that docker-compose.test.yml exists and loads correctly
+      - name: Validate compose file
+        run: |
+          echo "Listing files..."
+          ls -al .
+          echo "Validating docker-compose.test.yml..."
+          docker compose -f docker-compose.test.yml config
 
       # Build the frontend test containers from docker-compose.test.yml
       - name: Build test containers
