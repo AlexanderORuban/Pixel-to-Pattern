@@ -1,1 +1,10 @@
 name: Automated Deployment
+
+# Workflow triggers on pushes to main
+on:
+	push:
+		branches: [ main ]
+
+jobs:
+	deploy:
+	
