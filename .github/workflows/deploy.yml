@@ -12,6 +12,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      # To SSH into VM
       - name: Deploy to VM (Digital Ocean)
         uses: appleboy/ssh/action@v1.0.0
         with:
@@ -35,3 +36,42 @@ jobs:
             echo "*** Install Docker engine and compose plugin ***"
             sudo apt update
             sudo apt install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+
+            echo "*** Creating Directory ***"
+            mkdir -p ~/pixel-to-pattern
+            cd ~/pixel-to-pattern
+
+            echo "*** Writing .env ***"
+            cat << EENV > .env
+            DB_HOST=${DB_HOST}
+            DB_USER=${DB_USER}
+            DB_PASSWORD=${DB_PASSWORD}
+            DB_DATABASE=${DB_DATABASE}
+            DB_PORT=${DB_PORT}
+            SERVER_PORT=3000
+            EENV
+
+            echo "*** Write docker-compose.deploy.yml ***"
+            cat << ECOMP > docker-compose.deploy.yml
+            ${DOCKER_COMPOSE_DEPLOY_YML}
+            ECOMP
+
+            echo "*** Clean up Docker Images ***"
+            docker image prune -f
+
+            echo "*** Pull latest Docker Image ***"
+            docker compose -f docker-compose.deploy.yml pull
+
+            echo "*** Restart Containers ***"
+            docker compose -f docker-compose.deploy.yml up -db
+            
+            echo "*** Display Running Containers ***"
+            docker ps
+          
+          env:
+            DB_HOST: ${{ secrets.DB_HOST }}
+            DB_USER: ${{ secrets.DB_USER }}
+            DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+            DB_DATABASE: ${{ secrets.DB_DATABASE }}
+            DB_PORT: ${{ secrets.DB_PORT }}
+            DOCKER_COMPOSE_DEPLOY_YML: ${{ secrets.DOCKER_COMPOSE_DEPLOY_YML }}
