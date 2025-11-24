@@ -16,7 +16,7 @@ jobs:
       - name: Deploy to VM (Digital Ocean)
         uses: appleboy/ssh/action@v1.0.0
         with:
-          host: ${{ secrets.VM_HOSATA }}
+          host: ${{ secrets.VM_HOST }}
           username: ${{ secrets.VM_USERNAME }}
           password: ${{ secrets. VM_PASSWORD }}
           scripts: |
