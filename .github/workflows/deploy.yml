@@ -19,7 +19,7 @@ jobs:
           host: ${{ secrets.VM_HOST }}
           username: ${{ secrets.VM_USERNAME }}
           password: ${{ secrets. VM_PASSWORD }}
-          scripts: |
+          script: |
 
             echo "*** Updating + Upgrading VM ***"
             sudo apt-get update -y
