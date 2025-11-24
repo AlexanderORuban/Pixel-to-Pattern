@@ -1,12 +1,15 @@
 name: Automated Deployment
 
-# Workflow triggers on pushes to main
+# Workflow triggers only on successful merge to main branch
 on:
-  push:
+  pull_request:
+    types: [closed]
     branches: [ main ]
 
 jobs:
   deploy:
+    # Only run if the PR was actually merged
+    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
 
     steps:
@@ -14,11 +17,11 @@ jobs:
 
       # To SSH into VM
       - name: Deploy to VM (Digital Ocean)
-        uses: appleboy/ssh/action@v1.0.0
+        uses: appleboy/ssh-action@v1.0.0
         with:
           host: ${{ secrets.VM_HOST }}
           username: ${{ secrets.VM_USERNAME }}
-          password: ${{ secrets. VM_PASSWORD }}
+          password: ${{ secrets.VM_PASSWORD }}
           script: |
 
             echo "*** Updating + Upgrading VM ***"
@@ -41,7 +44,7 @@ jobs:
             mkdir -p ~/pixel-to-pattern
             cd ~/pixel-to-pattern
 
-            echo "*** Writing .env ***"
+            echo "*** Writing backend .env ***"
             cat << EENV > .env
             DB_HOST=${DB_HOST}
             DB_USER=${DB_USER}
@@ -51,7 +54,17 @@ jobs:
             SERVER_PORT=3000
             EENV
 
-            echo "*** Write docker-compose.deploy.yml ***"
+            echo "*** Writing frontend client/.env.production ***"
+            mkdir -p client
+            cd client
+
+            cat << FRONTENV > .env.production
+            NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
+            FRONTENV
+
+            cd ..
+
+            echo "*** Writing docker-compose.deploy.yml ***"
             cat << ECOMP > docker-compose.deploy.yml
             ${DOCKER_COMPOSE_DEPLOY_YML}
             ECOMP
@@ -59,12 +72,13 @@ jobs:
             echo "*** Clean up Docker Images ***"
             docker image prune -f
 
-            echo "*** Pull latest Docker Image ***"
-            docker compose -f docker-compose.deploy.yml pull
+            echo "*** Build and restart containers ***"
+            docker compose -f docker-compose.deploy.yml up -d --build
 
-            echo "*** Restart Containers ***"
-            docker compose -f docker-compose.deploy.yml up -db
-            
+            echo "*** Verifying Deployment ***"
+            sleep 5
+            curl -I http://localhost:3000 || exit 1
+
             echo "*** Display Running Containers ***"
             docker ps
           
@@ -75,3 +89,4 @@ jobs:
             DB_DATABASE: ${{ secrets.DB_DATABASE }}
             DB_PORT: ${{ secrets.DB_PORT }}
             DOCKER_COMPOSE_DEPLOY_YML: ${{ secrets.DOCKER_COMPOSE_DEPLOY_YML }}
+            NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}

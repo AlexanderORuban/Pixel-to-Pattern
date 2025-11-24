@@ -310,3 +310,10 @@ Each group of tests runs in its own job using Docker containers to ensure a cons
 ### Viewing Test Results
 
 All test results and logs are available in the GitHub “Actions” tab. Each job reports its status independently, making it easy to identify and troubleshoot failures. This ensures that both branches remain stable and that all new code is tested before being merged.
+
+## Automated VM Deployment Pipeline (GitHub Actions)
+Fill this out later with info like:
+- How it works
+- How to setup secrets
+- Deploying it the to VM
+- Using it etc
