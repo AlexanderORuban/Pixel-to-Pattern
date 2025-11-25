@@ -19,6 +19,9 @@ jobs:
           host: ${{ secrets.VM_HOST }}
           username: ${{ secrets.VM_USERNAME }}
           password: ${{ secrets.VM_PASSWORD }}
+
+          envs: DB_HOST,DB_USER,DB_PASSWORD,DB_DATABASE,DB_PORT,NEXT_PUBLIC_API_URL
+
           script: |
             echo "*** Updating + Upgrading VM ***"
             sudo apt-get update -y
