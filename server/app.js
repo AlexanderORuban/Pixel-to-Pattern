@@ -18,11 +18,11 @@ app.use(express.json());
 app.use(cors({ origin: true, credentials: true }));
 app.use(express.urlencoded({ extended: true }));
 
-app.use('/', router);
-
 app.get("/health", (req, res) => {
   res.send("OK");
 });
+
+app.use('/', router);
 
 // Error handling
 app.use((err, req, res, next) => {
