@@ -8,14 +8,13 @@ on:
 
 jobs:
   deploy:
-    # Only run if the PR was actually merged
     if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v3
 
-      # To SSH into VM
+      # Deploy via SSH to VM
       - name: Deploy to VM (Digital Ocean)
         uses: appleboy/ssh-action@v1.0.0
         with:
@@ -34,14 +33,22 @@ jobs:
             echo "*** Add Docker GPG Key and repo ***"
             sudo mkdir -p /etc/apt/keyrings
             curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
-            echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg]    https://download.docker.com/linux/ubuntu    $(lsb_release -cs) stable" |    sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+            echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] \
+                 https://download.docker.com/linux/ubuntu \
+                 $(lsb_release -cs) stable" | \
+                 sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 
             echo "*** Install Docker engine and compose plugin ***"
             sudo apt update
             sudo apt install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 
-            echo "*** Creating Directory ***"
-            mkdir -p ~/pixel-to-pattern
+            echo "*** Removing old deployment folder ***"
+            rm -rf ~/pixel-to-pattern
+
+            echo "*** Cloning latest repo ***"
+            git clone https://github.com/${{ github.repository }}.git ~/pixel-to-pattern
+
+            echo "*** Moving into project directory ***"
             cd ~/pixel-to-pattern
 
             echo "*** Writing backend .env ***"
@@ -57,36 +64,28 @@ jobs:
             echo "*** Writing frontend client/.env.production ***"
             mkdir -p client
             cd client
-
             cat << FRONTENV > .env.production
             NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
             FRONTENV
-
             cd ..
 
-            echo "*** Writing docker-compose.deploy.yml ***"
-            cat << ECOMP > docker-compose.deploy.yml
-            ${DOCKER_COMPOSE_DEPLOY_YML}
-            ECOMP
-
-            echo "*** Clean up Docker Images ***"
+            echo "*** Cleaning old docker images ***"
             docker image prune -f
 
-            echo "*** Build and restart containers ***"
+            echo "*** Building + Deploying containers using repo's compose file ***"
             docker compose -f docker-compose.deploy.yml up -d --build
 
             echo "*** Verifying Deployment ***"
             sleep 5
             curl -I http://localhost:3000 || exit 1
 
-            echo "*** Display Running Containers ***"
+            echo "*** Deployment complete. Running containers: ***"
             docker ps
-          
+
           env:
             DB_HOST: ${{ secrets.DB_HOST }}
             DB_USER: ${{ secrets.DB_USER }}
             DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
             DB_DATABASE: ${{ secrets.DB_DATABASE }}
             DB_PORT: ${{ secrets.DB_PORT }}
-            DOCKER_COMPOSE_DEPLOY_YML: ${{ secrets.DOCKER_COMPOSE_DEPLOY_YML }}
             NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}
