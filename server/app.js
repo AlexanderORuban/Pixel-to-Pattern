@@ -10,9 +10,11 @@ import router from './routes/router.js';
 export const app = express();
 
 // Resolve the project root .env path
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-dotenv.config({ path: path.join(__dirname, '../.env') });
+// const __filename = fileURLToPath(import.meta.url);
+// const __dirname = path.dirname(__filename);
+// dotenv.config({ path: path.join(__dirname, '../.env') });
+
+dotenv.config();
 
 app.use(express.json());
 app.use(cors({ origin: true, credentials: true }));
