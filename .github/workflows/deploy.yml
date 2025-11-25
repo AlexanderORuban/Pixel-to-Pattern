@@ -1,6 +1,5 @@
 name: Automated Deployment
 
-# Workflow triggers only on successful merge to main branch
 on:
   pull_request:
     types: [closed]
@@ -14,7 +13,6 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      # Deploy via SSH to VM
       - name: Deploy to VM (Digital Ocean)
         uses: appleboy/ssh-action@v1.0.0
         with:
@@ -32,8 +30,7 @@ jobs:
             echo "*** Add Docker GPG Key and repo ***"
             sudo mkdir -p /etc/apt/keyrings
             curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
-            echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | \
-              sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+            echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 
             echo "*** Install Docker engine and compose plugin ***"
             sudo apt update
@@ -78,10 +75,10 @@ jobs:
 
             echo "*** Deployment complete. Running containers: ***"
             docker ps
-          env:
-            DB_HOST: ${{ secrets.DB_HOST }}
-            DB_USER: ${{ secrets.DB_USER }}
-            DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-            DB_DATABASE: ${{ secrets.DB_DATABASE }}
-            DB_PORT: ${{ secrets.DB_PORT }}
-            NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}
+        env:
+          DB_HOST: ${{ secrets.DB_HOST }}
+          DB_USER: ${{ secrets.DB_USER }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          DB_DATABASE: ${{ secrets.DB_DATABASE }}
+          DB_PORT: ${{ secrets.DB_PORT }}
+          NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}
