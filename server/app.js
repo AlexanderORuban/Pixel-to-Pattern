@@ -20,6 +20,10 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use('/', router);
 
+app.get("/health", (req, res) => {
+  res.send("OK");
+});
+
 // Error handling
 app.use((err, req, res, next) => {
   console.error(err.stack);
